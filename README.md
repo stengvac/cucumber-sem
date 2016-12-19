@@ -18,12 +18,12 @@ view over tests. More info in functionality section.
 
 ### Reports
 *  present all necessary information
-**  feature name
-**  description
-**  scenario definitions
-**  scenario runs with passed and failed steps
-**  replace placeholders with data
-**  source project
+   *  feature name
+   *  description
+   *  scenario definitions
+   *  scenario runs with passed and failed steps
+   *  replace placeholders with data
+   *  source project
 *  show/hide failed steps/runs
 ### Statistics
 *  number of features passed/failed over time
