@@ -17,27 +17,26 @@ view over tests. More info in functionality section.
     * Link it together create some page site and design
 
 ### Reports
-    * present all necessary information
-        * feature name
-        * description
-        * scenario definitions
-        * scenario runs with passed and failed steps
-        * replace placeholders with data
-        * source project
-    * show/hide failed steps/runs
+*  present all necessary information
+**  feature name
+**  description
+**  scenario definitions
+**  scenario runs with passed and failed steps
+**  replace placeholders with data
+**  source project
+*  show/hide failed steps/runs
 ### Statistics
-    * number of features passed/failed over time
-    * number of features passed/failed in build run
-    * number of passed/failed/skipped/pending steps
+*  number of features passed/failed over time
+*  number of features passed/failed in build run
+*  number of passed/failed/skipped/pending steps
 
 This list is only general overview of the most important functionality. More details and necessary parts will reveal implementation so i will
 update this list in future.
 
 ## Technologies
-    * MongoDB - contains results from Cucumber tests
-    * Django
-    * Pandas
-    * Numpy
-    * Pytest
-    * ...
-*   Bird
+*  MongoDB - contains results from Cucumber tests
+*  Django
+*  Pandas
+*  Numpy
+*  Pytest
+*  ...
