@@ -29,8 +29,8 @@ Also browse results from older builds and more (depends on work involved).
 ## Functionality
 
 ### Common
-    * Page navigation
-    * Link it together create some page site and design
+*  Page navigation
+*  Link it together create some page site and design
 
 ### Reports
 *  present all necessary information
