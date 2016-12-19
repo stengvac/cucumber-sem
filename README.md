@@ -8,7 +8,7 @@ part of applications. However reporting tools provide only basic test outcome re
 So this semestral work should serve as better solution as reporting tool via web application for testers and monitoring tool with more complex
 view over tests and for business owner as tool to check quality and help plan test maintenance. More info in functionality section.
 
-Final product is web application focused on detail test output reporting and some basic statistics presentation.
+Final product is web application focused on detail test output reporting and some basic statistics about test outputs.
 User (tester) should be able quickly find errors within tests with user friendly GUI.
 User (business owner or some other project control role) is able to check stability of latest builds, number of tests,
 tests failure rate development over time etc.
@@ -24,7 +24,7 @@ Also technologies listed bellow will be required.
 3. Open index.html and select reports or statistics section.
 4. Inside statistics section you will see graph with test outputs development over time and other graphs (TODO create some meaningful GUI)
 5. Inside reports section can user find latest test outputs and check their detail for more details.
-Also browse results from older builds.
+Also browse results from older builds and more (depends on work involved).
 
 ## Functionality
 
