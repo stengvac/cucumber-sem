@@ -1,5 +1,13 @@
-from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponseRedirect
+
+from django.views import generic
 
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+class IndexView(generic.TemplateView):
+    template_name = 'index.html'
+
+
+class ReportsOverView(generic.ListView):
+    template_name = 'reports/overview'
+

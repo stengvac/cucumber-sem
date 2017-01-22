@@ -1,0 +1,17 @@
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<div class="content">
+{#        {% if form.errors %}#}
+{#            <div class="alert alert-danger">#}
+{#                <p>#}
+{#                    <strong>{% trans "Oh snap!" %}</strong> {% trans "Please enter a correct username and password. Note that both fields are case-sensitive." %}#}
+{#                </p>#}
+{#            </div>#}
+{#        {% endif %}#}
+    {% block content %}
+    {% endblock %}
+</div>

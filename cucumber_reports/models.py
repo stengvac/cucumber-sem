@@ -18,7 +18,7 @@ ScenarioType = (
 class StepRun(models.Model):
     duration = models.BigIntegerField()
     status = models.CharField(max_length=1, choices=StepStatus)
-    error_msg = models.CharField(max_length=200)
+    error_msg = models.CharField(max_length=200, null=True, blank=True)
 
 
 class StepDefinition(models.Model):
@@ -44,14 +44,9 @@ class Feature(models.Model):
     scenario_definitions = models.ForeignKey(ScenarioDefinition)
 
 
-
-
-
-
-
-
 class BuildRun(models.Model):
     build_number = models.IntegerField(null=False)
     build_name = models.CharField(max_length=200)
-    features = models.ForeignKey(Feature)
+    build_at = models.DateTimeField()
+    features = models.ForeignKey(Feature, blank=True, null=True)
 
