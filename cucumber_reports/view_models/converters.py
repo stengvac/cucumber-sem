@@ -1,34 +1,63 @@
-from cucumber_reports import models
 from . import view_models
+
 
 def convert_build_run(build_run):
     features = [convert_feature(feature) for feature in build_run.features]
 
     return view_models.BuildRun(build_run.build_name, build_run.build_number, build_run.build_at, features)
 
+
 def convert_feature(feature):
     bg = find_background(feature.scenario_definitions)
     converted_bg = None
+    bg_steps = []
+    definitions = []
+
     if bg is not None:
         converted_bg = view_models.ScenarioDefinition(bg.name, bg.descriiption, None, view_models.ScenarioType.BACKGROUND)
+        for run in bg.scenario_runs:
+            bg_steps.append(convert_step_runs(run.step_runs))
 
-    return view_models.Feature(feature.name, feature.description, )
+    bg_steps_cnt = len(bg_steps)
+    run_index = 0
+
+    for definition in feature.scenario_definitions:
+        if definition.type != 'BACKGROUND':
+            converted = convert_scenario_definition(definition)
+            definitions.append(converted)
+
+            if bg_steps_cnt > 0:
+                for run in converted.runs:
+                    run.bg_steps = bg_steps[run_index]
+                    run_index += 1
+
+    return view_models.Feature(feature.name, feature.description, definitions, converted_bg)
+
 
 def convert_scenario_definition(definition):
     runs = [convert_scenario_run(run) for run in definition.scenario_runs]
-
-
+    step_definitions = [convert_step_definition(step) for step in definition.step_definitions]
 
     return view_models.ScenarioDefinition(definition.name, definition.description, runs,
-                                          view_models.ScenarioType.from_string(definition.type),
-                                          )
+                                          view_models.ScenarioType.from_string(definition.type), step_definitions)
+
+
 def convert_step_definition(step):
     return view_models.StepDefinition(step.name, None, step.keyword)
 
-def convert_scenario_run(scenario_run):
-    return view_models.ScenarioRun()
 
-def
+def convert_scenario_run(scenario_run):
+    return view_models.ScenarioRun(convert_step_runs(scenario_run.step_runs), [])
+
+
+def convert_step_runs(step_runs):
+    res = []
+    for run in step_runs:
+        status = view_models.StepStatus.from_string(run.status)
+        res.append(view_models.StepRun(status, status == view_models.StepStatus.PASSED, run.duration, run.error_msg))
+
+    return res
+
 
 def find_background(definitions):
     for x in definitions:

@@ -28,14 +28,15 @@ class Feature(Statement):
 
 class ScenarioDefinition(Statement):
     """One scenario definition representation. Can be executed multiple times if its type is OUTLINE."""
-    def __init__(self, name, description, runs, type):
+    def __init__(self, name, description, runs, type, step_definitions):
         super().__init__(name, description)
         self.runs = runs
         self.type = type
+        self.step_definitions = step_definitions
 
     def scenario_outline(self):
         """Return true when instance is scenario outline."""
-        return type == ScenarioType.SCENARIO_OUTLINE
+        return self.type == ScenarioType.SCENARIO_OUTLINE
 
 
 class ScenarioRun:
