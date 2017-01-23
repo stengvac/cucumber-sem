@@ -96,10 +96,23 @@ def _passed(runs):
 
 
 class BuildStatistics:
-    def __init__(self, step_runs):
+    def __init__(self, step_runs, features_cnt):
         self.features_cnt = features_cnt
         self.step_runs = step_runs
         self.passed = _passed(step_runs)
+
+
+class OverViewReport:
+    def __init__(self, name):
+        self.build_name = name
+        self.runs = []
+
+
+class BuildRunReport:
+    def __init__(self, number, build_at, passed):
+        self.number = number
+        self.build_at = build_at
+        self.passed = passed
 
 
 class FeatureStatistic:
