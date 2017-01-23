@@ -17,3 +17,13 @@ class ReportsOverView(generic.ListView):
         For each project (specified by its name) show last n build runs and its results
         """
         return dao.find_n_build_runs(5)
+
+
+class BuildDetailView(generic.DetailView):
+    template_name = 'reports/build_detail'
+    context_object_name = 'build'
+    name = None
+    number = None
+
+    def get_queryset(self):
+        return dao.find_build_run(self.name, self.number)

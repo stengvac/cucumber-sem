@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <h1>Build detail</h1>
+    <dl>
+        <dt>Name</dt>
+        <dd>{{ build.name }}</dd>
+
+        <dt>Number</dt>
+        <dd>{{ build.number }}</dd>
+
+        <dt>Build at</dt>
+        <dd>{{ build.build_at }}</dd>
+    </dl>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Features</th>
+            <th>Status</th>
+            <th>Build at</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for feature in build.features %}
+                <tr>
+                    <td>{{ feature.name }}</tr>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
