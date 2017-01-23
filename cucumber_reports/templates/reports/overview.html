@@ -6,11 +6,21 @@
         <thead>
         <tr>
             <th>Build</th>
+            <th>Status</th>
+            <th>Build at</th>
         </tr>
-        <th>Status</th>
         </thead>
         <tbody>
-            {{  }}
+            {% for build in latest_builds %}
+                <tr>
+                    <td>{{ build.name }}</td>
+                    <ul>
+                        {% for run in build.runs %}
+                            <li><a href="{% url 'reports_build_detail' build.name run.number %}">{{ run.number }}/{{ run.build_at }}</a></li>
+                        {% endfor  %}
+                    </ul>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 

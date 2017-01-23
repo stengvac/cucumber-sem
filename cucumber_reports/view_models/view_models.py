@@ -10,11 +10,12 @@ class Statement:
 
 class BuildRun:
     """One build run can contain multiple features."""
-    def __init__(self, name, number, build_at, features):
+    def __init__(self, name, number, build_at, features, passed):
         self.name = name
         self.number = number
         self.build_at = build_at
         self.features = features
+        self.passed = passed
 
 
 class Feature(Statement):
@@ -104,7 +105,7 @@ class BuildStatistics:
 
 class OverViewReport:
     def __init__(self, name):
-        self.build_name = name
+        self.name = name
         self.runs = []
 
 
