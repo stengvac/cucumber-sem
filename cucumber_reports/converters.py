@@ -2,19 +2,22 @@ from . import view_models
 
 
 def convert_build_run(build_run):
-    features = [convert_feature(feature) for feature in build_run.features]
+    """Convert dao build run to view build run"""
+    features = [convert_feature_report(feature) for feature in build_run.features]
 
     return view_models.BuildRun(build_run.build_name, build_run.build_number, build_run.build_at, features)
 
 
-def convert_feature(feature):
+def convert_feature_report(feature):
+    """Convert dao feature to feature report for view purposes"""
     bg = find_background(feature.scenario_definitions)
     converted_bg = None
     bg_steps = []
     definitions = []
 
     if bg is not None:
-        converted_bg = view_models.ScenarioDefinition(bg.name, bg.descriiption, None, view_models.ScenarioType.BACKGROUND)
+        converted_bg = view_models.ScenarioDefinitionReport(bg.name, bg.descriiption, None,
+                                                            view_models.ScenarioType.BACKGROUND, True)
         for run in bg.scenario_runs:
             bg_steps.append(convert_step_runs(run.step_runs))
 
@@ -31,26 +34,30 @@ def convert_feature(feature):
                     run.bg_steps = bg_steps[run_index]
                     run_index += 1
 
-    return view_models.Feature(feature.name, feature.description, definitions, converted_bg)
+    return view_models.FeatureReport(feature.name, feature.description, definitions, converted_bg)
 
 
 def convert_scenario_definition(definition):
+    """Convert scenario definition to view scenario definition"""
     runs = [convert_scenario_run(run) for run in definition.scenario_runs]
     step_definitions = [convert_step_definition(step) for step in definition.step_definitions]
 
-    return view_models.ScenarioDefinition(definition.name, definition.description, runs,
+    return view_models.ScenarioDefinitionReport(definition.name, definition.description, runs,
                                           view_models.ScenarioType.from_string(definition.type), step_definitions)
 
 
 def convert_step_definition(step):
+    """Convert dao step definition to view step definition"""
     return view_models.StepDefinition(step.name, None, step.keyword)
 
 
 def convert_scenario_run(scenario_run):
+    """Convert dao scenario run to view scenario run"""
     return view_models.ScenarioRun(convert_step_runs(scenario_run.step_runs), [])
 
 
 def convert_step_runs(step_runs):
+    """Convert dao steps runs to view model step runs"""
     res = []
     for run in step_runs:
         status = view_models.StepStatus.from_string(run.status)
@@ -60,7 +67,12 @@ def convert_step_runs(step_runs):
 
 
 def find_background(definitions):
+    """Find background within definitions. If not present return None"""
     for x in definitions:
         if x.type == 'BACKGROUND':
             return x
     return None
+
+
+
+

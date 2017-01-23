@@ -10,24 +10,33 @@ class Statement:
 
 class BuildRun:
     """One build run can contain multiple features."""
-    def __init__(self, name, number, build_at, features, passed):
-        self.name = name
-        self.number = number
-        self.build_at = build_at
-        self.features = features
+    def __init__(self, metadata, passed):
+        self.metadata = metadata
         self.passed = passed
 
 
-class Feature(Statement):
+class BuildRumMetadata:
+    """Common information about build run"""
+    def __init__(self, name, number, build_at):
+        self.name = name
+        self.number = number
+        self.build_at = build_at
+
+
+class FeatureReport(Statement):
     """Feature contains multiple test scenarios."""
-    def __init__(self, name, description, definitions, background):
+    def __init__(self, name, description, definitions, background, metadata):
         super().__init__(name, description)
+        self.build_metadata = metadata
         self.scenario_definitions = definitions
         self.background = background
-        self.passed = _passed(definitions)
+
+    def passed(self):
+        """Return true when all scenario definitions with all their runs finished without failures"""
+        return passed(self.scenario_definitions)
 
 
-class ScenarioDefinition(Statement):
+class ScenarioDefinitionReport(Statement):
     """One scenario definition representation. Can be executed multiple times if its type is OUTLINE."""
     def __init__(self, name, description, runs, type, step_definitions):
         super().__init__(name, description)
@@ -39,13 +48,19 @@ class ScenarioDefinition(Statement):
         """Return true when instance is scenario outline."""
         return self.type == ScenarioType.SCENARIO_OUTLINE
 
+    def passed(self):
+        """Return true when all runs passed without failure"""
+        return passed(self.runs)
+
 
 class ScenarioRun:
     """Represent one scenario run."""
     def __init__(self, steps, bg_steps):
         self.step_runs = steps
         self.bg_steps = bg_steps
-        self.passed = _passed(steps) and _passed(bg_steps)
+
+    def passed(self):
+        return passed(self.step_runs) and passed(self.bg_steps)
 
 
 class StepDefinition(Statement):
@@ -57,11 +72,14 @@ class StepDefinition(Statement):
 
 class StepRun:
     """Represent step run of associated step definition"""
-    def __init__(self, status, passed, duration, error_msg):
-        self.passed = passed
+    def __init__(self, status, duration, error_msg):
         self.duration = duration
         self.error_msg = error_msg
         self.status = status
+
+    def passed(self):
+        """Step run passed when its status eq PASSED otherwise run failed"""
+        return StepStatus.PASSED == self.status
 
 
 class StepStatus(Enum):
@@ -88,19 +106,12 @@ class ScenarioType(Enum):
         return getattr(cls, value, None)
 
 
-def _passed(runs):
-    """Return true when all objects in collection passed"""
-    for run in runs:
-        if not run.passed:
-            return False
-    return True
-
 
 class BuildStatistics:
     def __init__(self, step_runs, features_cnt):
         self.features_cnt = features_cnt
         self.step_runs = step_runs
-        self.passed = _passed(step_runs)
+
 
 
 class OverViewReport:
@@ -124,3 +135,11 @@ class FeatureStatistic:
         self.step_passed_cnt = step_passed_cnt
         self.step_failed_cnt = step_run_cnt - step_passed_cnt
         self.scenario_def_cnt = None
+
+
+def passed(runs):
+    """Return true when all objects in collection passed"""
+    for run in runs:
+        if not run.passed():
+            return False
+    return True

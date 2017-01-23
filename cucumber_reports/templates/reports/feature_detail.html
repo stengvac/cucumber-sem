@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <h1>Feature detail</h1>
+    {{ feature.build_metadata.name }}-{{ feature.build_metadata.number }}  {{ feature.build_metadata.build_at }}
+    <dl>
+        <dt>Feature Name</dt>
+        <dd>{{ feature.name }}</dd>
+
+        <dt>Description</dt>
+        <dd>{{ feature.build_metadata.number }}</dd>
+
+        <dt>Build at</dt>
+        <dd>{{ feature.build_metadata.build_at }}</dd>
+    </dl>
+
+    {% for definition in feature.scenario_definitions %}
+        {% for run in definition.runs %}
+            <div class="bd-callout">
+                <h4>{{ definition.name }}</h4>
+                <h3>Steps</h3>
+                <dl class="dl-horizontal">
+                    {% for step in run.step_runs %}
+                        <dt>{{ definition.step_definitions|iterate:forloop.counter0.keyword }}</dt>
+                        <dd>{{ definition.step_definitions|iterate:forloop.counter0.name }} ({{ step.duration }})</dd>
+                    {% endfor %}
+                </dl>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+{% endblock %}
