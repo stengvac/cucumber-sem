@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cucumber_reports',
-    'bootstrap3'
+    'bootstrap3',
 ]
 
 MIDDLEWARE = [

@@ -1,1 +1,5 @@
+numpy
+pandas
+django
+django-pandas
 django-bootstrap3

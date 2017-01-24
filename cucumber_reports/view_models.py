@@ -106,12 +106,13 @@ class ScenarioType(Enum):
         return getattr(cls, value, None)
 
 
-
-class BuildStatistics:
-    def __init__(self, step_runs, features_cnt):
+class BuildOverTimeStatistics:
+    def __init__(self, step_runs, features_cnt, features_passed, steps_passed, meta):
         self.features_cnt = features_cnt
         self.step_runs = step_runs
-
+        self.features_passed =features_passed
+        self.steps_passed = steps_passed
+        self.metadata = meta
 
 
 class OverViewReport:
