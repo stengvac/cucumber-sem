@@ -21,6 +21,7 @@ def find_feature(build_name, build_number, feature_name):
 
 
 def find_n_build_runs(times):
+
     runs = models.BuildRun.objects.all()#.aggregate('build_name').order_by('build_number')
     res = []
     last_run = None
@@ -31,12 +32,15 @@ def find_n_build_runs(times):
         if name != run.build_name:
             name = run.build_name
             last_run = view_models.OverViewReport(name)
+            last_run.runs.append(view_models.BuildRunReport(run.build_number, run.build_at, True))
             res.append(last_run)
             same = 0
         else:
             same += 1
             if same < times:
-                last_run.runs.append(run.build_number, run.build_at, build_run_passed(run))
+                last_run.runs.append(view_models.BuildRunReport(run.build_number, run.build_at, build_run_passed(run)))
+
+    return res
 
 
 def development_over_time(build_name):

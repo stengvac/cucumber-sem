@@ -16,7 +16,7 @@
                     <td>{{ build.name }}</td>
                     <ul>
                         {% for run in build.runs %}
-                            <li><a href="{% url 'reports_build_detail' build.name run.number %}">{{ run.number }}/{{ run.build_at }}</a></li>
+                            <li><a href="{% url 'reports_build_detail' name=build.name number=run.number %}">{{ run.number }}/{{ run.build_at }}</a></li>
                         {% endfor  %}
                     </ul>
                 </tr>
