@@ -4,9 +4,13 @@ from . import view_models
 def convert_build_run(build_run):
     """Convert dao build run to view build run"""
     features = [convert_feature_metadata(feature) for feature in build_run.features.iterator()]
-    meta = view_models.BuildRunMetadata(build_run.build_name, build_run.build_number, build_run.build_at)
 
-    return view_models.BuildRunReport(meta, build_run.passed(), features)
+    return view_models.BuildRunReport(convert_build_metadata(build_run), features)
+
+
+def convert_build_metadata(build_run):
+    return view_models.BuildRunMetadata(build_run.build_name, build_run.build_number,
+                                        build_run.build_at, build_run.passed())
 
 
 def convert_feature_metadata(feature):

@@ -3,7 +3,7 @@ from django import template
 from django.views import generic
 from . import dao
 from django_pandas.io import read_frame
-
+from . import view_models
 register = template.Library()
 
 
@@ -25,8 +25,10 @@ class ReportsOverView(generic.ListView):
 class BuildDetailView(generic.TemplateView):
     """Represent view for build detail"""
     template_name = 'reports/build_detail.html'
+    context_object_name = 'build'
     name = None
     number = None
+    model = view_models.BuildRunReport
 
     def get_context_data(self, **kwargs):
         context = super(BuildDetailView, self).get_context_data(**kwargs)
@@ -35,18 +37,16 @@ class BuildDetailView(generic.TemplateView):
         return context
 
     def get_queryset(self):
-        print(self.name)
         return dao.find_build_run(self.name, self.number)
 
     def dispatch(self, request, *args, **kwargs):
         self.name = kwargs.get('name')
         self.number = kwargs.get('number')
-        print(self.number)
 
         return super(BuildDetailView, self).dispatch(request, args, kwargs)
 
 
-class FeatureReportView(generic.DetailView):
+class FeatureReportView(generic.TemplateView):
     """Represent view for feature report"""
     template_name = 'reports/feature_detail.html'
     context_object_name = 'feature'
@@ -58,6 +58,12 @@ class FeatureReportView(generic.DetailView):
         """Retrieve feature report from build and its name"""
         return dao.find_feature(self.build_name, self.build_number, self.feature_name)
 
+    def dispatch(self, request, *args, **kwargs):
+        self.build_name = kwargs.get('build_name')
+        self.build_number = kwargs.get('build_number')
+        self.feature_name = kwargs.get('feature')
+
+        return super(FeatureReportView, self).dispatch(request, args, kwargs)
 
 class BuildOverTimeStatistics(generic.DetailView):
     template_name = 'statistics/build_over_time.html'

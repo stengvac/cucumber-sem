@@ -1,4 +1,5 @@
 from enum import Enum
+from django.db import models
 
 
 class Statement:
@@ -10,9 +11,8 @@ class Statement:
 
 class BuildRunReport:
     """One build run can contain multiple features."""
-    def __init__(self, metadata, passed, features):
+    def __init__(self, metadata, features):
         self.metadata = metadata
-        self.passed = passed
         self.features = features
 
 
@@ -24,10 +24,11 @@ class FeatureMetadata:
 
 class BuildRunMetadata:
     """Common information about build run"""
-    def __init__(self, name, number, build_at):
+    def __init__(self, name, number, build_at, passed):
         self.name = name
         self.number = number
         self.build_at = build_at
+        self.passed = passed
 
 
 class FeatureReport(Statement):
@@ -126,14 +127,6 @@ class OverViewReport:
     def __init__(self, name):
         self.name = name
         self.runs = []
-
-
-class BuildRunReport:
-    def __init__(self, number, build_at, passed):
-        self.number = number
-        self.build_at = build_at
-        self.passed = passed
-
 
 class FeatureStatistic:
     def __init__(self, passed, step_cnt, step_run_cnt, step_passed_cnt):

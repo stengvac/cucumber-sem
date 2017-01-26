@@ -4,26 +4,24 @@
     <h1>Build detail</h1>
     <dl>
         <dt>Name</dt>
-        <dd>{{ build.name }}</dd>
+        <dd>{{ build.metadata.name }}</dd>
 
         <dt>Number</dt>
-        <dd>{{ build.number }}</dd>
+        <dd>{{ build.metadata.number }}</dd>
 
         <dt>Build at</dt>
-        <dd>{{ build.build_at }}</dd>
+        <dd>{{ build.metadata.build_at }}</dd>
     </dl>
     <table class="table">
         <thead>
         <tr>
             <th>Features</th>
-            <th>Status</th>
-            <th>Build at</th>
         </tr>
         </thead>
         <tbody>
             {% for feature in build.features %}
                 <tr>
-                    <td>{{ feature.name }}</tr>
+                    <a href="{% url 'reports_feature_detail' build_name=build.metadata.name build_number='asd' feature=feature.name %}">{{ feature.name }}</a></tr>
                 </tr>
             {% endfor %}
         </tbody>

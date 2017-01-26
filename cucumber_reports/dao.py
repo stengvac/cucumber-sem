@@ -33,16 +33,17 @@ def find_n_build_runs(times):
     same = 0
 
     for run in runs:
+        meta = convert_build_metadata(run)
         if name != run.build_name:
             name = run.build_name
             last_run = view_models.OverViewReport(name)
-            last_run.runs.append(view_models.BuildRunReport(run.build_number, run.build_at, True))
+            last_run.runs.append(meta)
             res.append(last_run)
             same = 0
         else:
             same += 1
             if same < times:
-                last_run.runs.append(view_models.BuildRunReport(run.build_number, run.build_at, build_run_passed(run)))
+                last_run.runs.append(meta)
 
     return res
 
