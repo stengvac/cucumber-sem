@@ -7,8 +7,11 @@ def _find_build_run(name, number):
 
 
 def find_build_run(name, number):
-    convert_build_run(_find_build_run(name, number))
+    runs = _find_build_run(name, number)
 
+    if runs.count() == 1:
+        return convert_build_run(runs.first())
+    return None
 
 def find_feature(build_name, build_number, feature_name):
     build = _find_build_run(build_name, build_number)

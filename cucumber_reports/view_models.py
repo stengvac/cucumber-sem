@@ -8,14 +8,21 @@ class Statement:
         self.description = description
 
 
-class BuildRun:
+class BuildRunReport:
     """One build run can contain multiple features."""
-    def __init__(self, metadata, passed):
+    def __init__(self, metadata, passed, features):
         self.metadata = metadata
+        self.passed = passed
+        self.features = features
+
+
+class FeatureMetadata:
+    def __init__(self, name, passed):
+        self.name = name
         self.passed = passed
 
 
-class BuildRumMetadata:
+class BuildRunMetadata:
     """Common information about build run"""
     def __init__(self, name, number, build_at):
         self.name = name

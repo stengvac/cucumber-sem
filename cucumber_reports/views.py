@@ -22,16 +22,28 @@ class ReportsOverView(generic.ListView):
         return self.queryset
 
 
-class BuildDetailView(generic.DetailView):
+class BuildDetailView(generic.TemplateView):
     """Represent view for build detail"""
     template_name = 'reports/build_detail.html'
-    context_object_name = 'build'
     name = None
     number = None
 
+    def get_context_data(self, **kwargs):
+        context = super(BuildDetailView, self).get_context_data(**kwargs)
+        context['build'] = self.get_queryset()
+
+        return context
+
     def get_queryset(self):
-        """Build detail obtained from build name and number"""
+        print(self.name)
         return dao.find_build_run(self.name, self.number)
+
+    def dispatch(self, request, *args, **kwargs):
+        self.name = kwargs.get('name')
+        self.number = kwargs.get('number')
+        print(self.number)
+
+        return super(BuildDetailView, self).dispatch(request, args, kwargs)
 
 
 class FeatureReportView(generic.DetailView):
