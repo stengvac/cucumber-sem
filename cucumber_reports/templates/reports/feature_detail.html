@@ -21,8 +21,8 @@
                 <h3>Steps</h3>
                 <dl class="dl-horizontal">
                     {% for step in run.step_runs %}
-                        <dt>{{ definition.step_definitions|iterate:forloop.counter0.keyword }}</dt>
-                        <dd>{{ definition.step_definitions|iterate:forloop.counter0.name }} ({{ step.duration }})</dd>
+                        <dt>{{ step.step_def.keyword }}</dt>
+                        <dd>{{ step.step_def.name }} ({{ step.duration }})</dd>
                     {% endfor %}
                 </dl>
             </div>

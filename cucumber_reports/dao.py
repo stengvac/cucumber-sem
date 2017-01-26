@@ -3,23 +3,26 @@ from .converters import *
 
 
 def _find_build_run(name, number):
-    return models.BuildRun.objects.filter(build_name=name, build_number=number)
+    runs = models.BuildRun.objects.filter(build_name=name, build_number=number)
+
+    if runs.count() == 1:
+        return runs.first()
+    return None
 
 
 def find_build_run(name, number):
-    runs = _find_build_run(name, number)
-
-    if runs.count() == 1:
-        return convert_build_run(runs.first())
-    return None
+    run = _find_build_run(name, number)
+    if run is None:
+        return None
+    return convert_build_run(run)
 
 
 def find_feature(build_name, build_number, feature_name):
     build = _find_build_run(build_name, build_number)
 
-    for feature in build.features:
+    for feature in build.features.iterator():
         if feature.name == feature_name:
-            return convert_feature_report(feature)
+            return convert_feature_report(feature, build)
 
     return None
 
@@ -69,7 +72,7 @@ def development_over_time(build_name):
                         steps += 1
                         if step.status == models.StepStatus[0][1]:
                             passed_steps += 1
-        meta = view_models.BuildRumMetadata(build.build_name, build.build_number, build.build_at)
+        meta = view_models.BuildRunMetadata(build.build_name, build.build_number, build.build_at, None)
         res.append(view_models.BuildOverTimeStatistics(steps, features, 0, passed_steps, meta))
 
     return res

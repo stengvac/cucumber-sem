@@ -16,12 +16,6 @@ class BuildRunReport:
         self.features = features
 
 
-class FeatureMetadata:
-    def __init__(self, name, passed):
-        self.name = name
-        self.passed = passed
-
-
 class BuildRunMetadata:
     """Common information about build run"""
     def __init__(self, name, number, build_at, passed):
@@ -33,9 +27,9 @@ class BuildRunMetadata:
 
 class FeatureReport(Statement):
     """Feature contains multiple test scenarios."""
-    def __init__(self, name, description, definitions, background, metadata):
+    def __init__(self, name, description, definitions, background, build_metadata):
         super().__init__(name, description)
-        self.build_metadata = metadata
+        self.build_metadata = build_metadata
         self.scenario_definitions = definitions
         self.background = background
 
@@ -46,11 +40,10 @@ class FeatureReport(Statement):
 
 class ScenarioDefinitionReport(Statement):
     """One scenario definition representation. Can be executed multiple times if its type is OUTLINE."""
-    def __init__(self, name, description, runs, type, step_definitions):
+    def __init__(self, name, description, runs, type):
         super().__init__(name, description)
         self.runs = runs
         self.type = type
-        self.step_definitions = step_definitions
 
     def scenario_outline(self):
         """Return true when instance is scenario outline."""
@@ -80,7 +73,8 @@ class StepDefinition(Statement):
 
 class StepRun:
     """Represent step run of associated step definition"""
-    def __init__(self, status, duration, error_msg):
+    def __init__(self, definition, status, duration, error_msg):
+        self.step_def = definition
         self.duration = duration
         self.error_msg = error_msg
         self.status = status

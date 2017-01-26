@@ -21,7 +21,7 @@
         <tbody>
             {% for feature in build.features %}
                 <tr>
-                    <a href="{% url 'reports_feature_detail' build_name=build.metadata.name build_number='asd' feature=feature.name %}">{{ feature.name }}</a></tr>
+                    <a href="{% url 'reports_feature_detail' build_name=build.metadata.name build_number=build.metadata.number feature=feature.name %}">{{ feature.name }}</a></tr>
                 </tr>
             {% endfor %}
         </tbody>

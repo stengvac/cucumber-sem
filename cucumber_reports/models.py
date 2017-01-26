@@ -44,6 +44,7 @@ class ScenarioDefinition(models.Model):
     name = models.CharField(max_length=200)
     type = models.CharField(max_length=1, choices=ScenarioType)
     feature = models.ForeignKey(Feature, related_name='scenario_definitions')
+    # description = models.CharField(max_length=300, null=True, blank=True)
 
     def passed(self):
         return passed(self.scenario_runs.iterator())

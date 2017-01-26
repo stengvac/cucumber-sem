@@ -49,7 +49,6 @@ class BuildDetailView(generic.TemplateView):
 class FeatureReportView(generic.TemplateView):
     """Represent view for feature report"""
     template_name = 'reports/feature_detail.html'
-    context_object_name = 'feature'
     build_name = None
     build_number = None
     feature_name = None
@@ -58,12 +57,19 @@ class FeatureReportView(generic.TemplateView):
         """Retrieve feature report from build and its name"""
         return dao.find_feature(self.build_name, self.build_number, self.feature_name)
 
+    def get_context_data(self, **kwargs):
+        context = super(FeatureReportView, self).get_context_data(**kwargs)
+        context['feature'] = self.get_queryset()
+
+        return context
+
     def dispatch(self, request, *args, **kwargs):
         self.build_name = kwargs.get('build_name')
         self.build_number = kwargs.get('build_number')
         self.feature_name = kwargs.get('feature')
 
         return super(FeatureReportView, self).dispatch(request, args, kwargs)
+
 
 class BuildOverTimeStatistics(generic.DetailView):
     template_name = 'statistics/build_over_time.html'
