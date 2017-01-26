@@ -12,7 +12,7 @@ urlpatterns = [
         views.FeatureReportView.as_view(), name='reports_feature_detail'),
 
     #Statistics
-    url(r'statistics/build/(?P<name>[\w]+)/$', views.BuildDetailView.as_view(), name='reports_build_detail'),
     url(r'statistics/img/temp.png$', views.render_img, name='img'),
     url(r'statistics/overall$', views.StatisticOverviewView.as_view(), name='overall'),
+    url(r'statistics/build/(?P<name>[\w]+)/(?P<number>[\w]+)/$', views.BuildRunStatisticsView.as_view(), name='statistics_build'),
 ]

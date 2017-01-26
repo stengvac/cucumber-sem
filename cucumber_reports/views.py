@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404, render
-from django import template
 from django.views import generic
 from . import dao
 from django_pandas.io import read_frame
@@ -8,7 +7,7 @@ from django.http import HttpResponse
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-register = template.Library()
+
 
 
 class IndexView(generic.TemplateView):
@@ -103,6 +102,27 @@ class BuildOverTimeStatisticsView(generic.TemplateView):
 
 class StatisticOverviewView(generic.TemplateView):
     template_name = 'statistics/overall.html'
+
+
+class BuildRunStatisticsView(generic.TemplateView):
+    template_name = 'statistics/build_statistics.html'
+    name = None
+    number = None
+
+    def get_context_data(self, **kwargs):
+        context = super(BuildRunStatisticsView, self).get_context_data(**kwargs)
+        context['build'] = self.get_queryset()
+
+        return context
+
+    def get_queryset(self):
+        return dao.build_run_statistics(self.name, self.number)
+
+    def dispatch(self, request, *args, **kwargs):
+        self.name = kwargs.get('name')
+        self.number = kwargs.get('number')
+
+        return super(BuildRunStatisticsView, self).dispatch(request, args, kwargs)
 
 
 def render_img(request):

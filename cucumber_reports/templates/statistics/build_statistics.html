@@ -1,7 +1,39 @@
 {% extends 'layout.html' %}
+{% load filters %}
 
 {% block content %}
-    <h1>Reports overall</h1>
-    <img src="{% url 'img' %}">
+    <h1>Build statistics</h1>
+
+   <dl>
+        <dt>Name</dt>
+        <dd>{{ build.metadata.name }}</dd>
+
+        <dt>Number</dt>
+        <dd>{{ build.metadata.number }}</dd>
+
+        <dt>Build at</dt>
+        <dd>{{ build.metadata.build_at }}</dd>
+    </dl>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Step definitions</th>
+                <th>Step runs/Passed</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for feature in build.feature_statistics %}
+                <tr class="text-{{ feature.passed|success }}">
+                    <td>{{ feature.name }}</td>
+                    <td>{{ feature.step_cnt }}</td>
+                    <td>{{ feature.step_run_cnt }}/{{ feature.step_passed_cnt }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
 
 {% endblock %}
