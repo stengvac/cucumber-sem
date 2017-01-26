@@ -122,8 +122,16 @@ class OverViewReport:
         self.name = name
         self.runs = []
 
+
+class BuildRunStatistics:
+    def __init__(self, metadata, features):
+        self.metadata = metadata
+        self.feature_statistics = features
+
+
 class FeatureStatistic:
-    def __init__(self, passed, step_cnt, step_run_cnt, step_passed_cnt):
+    def __init__(self, name, passed, step_cnt, step_run_cnt, step_passed_cnt):
+        self.name = name
         self.passed = passed
         self.step_cnt = step_cnt
         self.step_run_cnt = step_run_cnt

@@ -3,3 +3,4 @@ pandas
 django
 django-pandas
 django-bootstrap3
+matplotlib

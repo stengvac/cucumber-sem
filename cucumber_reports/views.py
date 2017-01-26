@@ -4,6 +4,10 @@ from django.views import generic
 from . import dao
 from django_pandas.io import read_frame
 from . import view_models
+from django.http import HttpResponse
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+
 register = template.Library()
 
 
@@ -71,21 +75,46 @@ class FeatureReportView(generic.TemplateView):
         return super(FeatureReportView, self).dispatch(request, args, kwargs)
 
 
-class BuildOverTimeStatistics(generic.DetailView):
+class BuildOverTimeStatisticsView(generic.TemplateView):
     template_name = 'statistics/build_over_time.html'
-    context_object_name = 'builds'
     build_name = None
 
     def get_context_data(self, **kwargs):
-        context = super(BuildOverTimeStatistics, self).get_context_data(**kwargs)
-        builds = dao.development_over_time(self.build_name)
+        context = super(BuildOverTimeStatisticsView, self).get_context_data(**kwargs)
+        builds = self.get_queryset()
         df = read_frame(builds)
+        #
+        # graphic = cStringIO.StringIO()
+        # canvas.print_png(graphic)
+        # return render(request, 'graphic.html', {'graphic': graphic})
 
-        context['features'] = df
+        context['stat'] = df.plot()
 
         return context
 
+    def get_queryset(self):
+        return dao.development_over_time(self.build_name)
 
-@register.filter
-def iterate(col, ind):
-    return col[int(ind)]
+    def dispatch(self, request, *args, **kwargs):
+        self.build_name = kwargs.get('name')
+
+        return super(BuildOverTimeStatisticsView, self).dispatch(request, args, kwargs)
+
+
+class StatisticOverviewView(generic.TemplateView):
+    template_name = 'statistics/overall.html'
+
+
+def render_img(request):
+    # plt.plot([1, 2, 3, 4])
+    #plt.ylabel('nums')
+    #... code to generate fig for ploting - works well
+    fig = Figure()
+    canvas = FigureCanvas(fig)
+    ax = fig.add_subplot(111)
+    ax.plot([1, 2, 3, 4])
+    #This works but does not seem to pass file to HTML
+
+    response = HttpResponse(content_type='image/png')
+    canvas.print_png(response)
+    return response
