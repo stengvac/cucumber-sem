@@ -1,25 +1,33 @@
-{# Load the tag library #}
-{% load bootstrap3 %}
+<html>
+<head>
+    {# Load the tag library #}
+    {% load bootstrap3 %}
 
-{# Load CSS and JavaScript #}
-{% bootstrap_css %}
-{% bootstrap_javascript %}
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
 <div class="content">
 
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <a class="navbar-brand" href={% url 'index' %}>Index</a>
-    </div>
-</nav>
-{#        {% if form.errors %}#}
-{#            <div class="alert alert-danger">#}
-{#                <p>#}
-{#                    <strong>{% trans "Oh snap!" %}</strong> {% trans "Please enter a correct username and password. Note that both fields are case-sensitive." %}#}
-{#                </p>#}
-{#            </div>#}
-{#        {% endif %}#}
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href={% url 'index' %}>Index</a>
+            </div>
+    </nav>
+    {#        {% if form.errors %}#}
+    {#            <div class="alert alert-danger">#}
+    {#                <p>#}
+    {#                    <strong>{% trans "Oh snap!" %}</strong> {% trans "Please enter a correct username and password. Note that both fields are case-sensitive." %}#}
+    {#                </p>#}
+    {#            </div>#}
+    {#        {% endif %}#}
     {% block content %}
     {% endblock %}
 </div>
+</body>
+</html>

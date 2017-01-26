@@ -1,8 +1,21 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-Pick your poison
+    <h1>Pick your poison</h1>
 
-<li><a href="{% url 'reports_overview' %}">Reports</a></li>
-<li><a href="{% url 'statistics_overview' %}">Reports</a></li>
+    <div class="row text-center text-muted">
+        <div class="col-md-6">
+            <h2><a class="text-muted" href="{% url 'statistics_overview' %}">Statistics</a></h2>
+            <div class="row">
+                <a class="text-muted" href="{% url 'statistics_overview' %}"><i class="fa fa-line-chart fa-5x" style="font-size:400px;"></i></a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h2><a class="text-muted" href="{% url 'reports_overview' %}">Reports</a></h2>
+            <div class="row">
+                <a class="text-muted" href="{% url 'reports_overview' %}"><i class="fa fa-file-text fa-5x" style="font-size:400px;"></i></a>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

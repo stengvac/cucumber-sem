@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'statistics/img/temp.png$', views.render_img, name='img'),
     url(r'statistics/overall$', views.StatisticOverviewView.as_view(), name='overall'),
     url(r'statistics/build/(?P<name>[\w]+)/(?P<number>[\w]+)/$', views.BuildRunStatisticsView.as_view(), name='statistics_build'),
+    url(r'statistics/overall$', views.StatisticOverviewView.as_view(), name='statistics_overview'),
 ]
