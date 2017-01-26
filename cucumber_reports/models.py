@@ -24,12 +24,16 @@ class StepRun(models.Model):
     def passed(self):
         return self.status == StepStatus[0][1]
 
+    class Meta:
+        db_table = 'step_run'
 
 
 class StepDefinition(models.Model):
     name = models.CharField(max_length=200)
     keyword = models.CharField(max_length=20)
 
+    class Meta:
+        db_table = 'step_def'
 
 
 class ScenarioRun(models.Model):
@@ -38,6 +42,9 @@ class ScenarioRun(models.Model):
 
     def passed(self):
         return passed(self.step_runs)
+
+    class Meta:
+        db_table = 'scenario_run'
 
 
 class ScenarioDefinition(models.Model):
@@ -49,6 +56,9 @@ class ScenarioDefinition(models.Model):
     def passed(self):
         return passed(self.scenario_runs)
 
+    class Meta:
+        db_table = 'scenario_def'
+
 
 class Feature(models.Model):
     name = models.CharField(max_length=200)
@@ -57,6 +67,9 @@ class Feature(models.Model):
 
     def passed(self):
         return passed(self.scenario_definitions)
+
+    class Meta:
+        db_table = 'feature'
 
 
 class BuildRun(models.Model):
@@ -67,6 +80,9 @@ class BuildRun(models.Model):
 
     def passed(self):
         return passed(self.features)
+
+    class Meta:
+        db_table = 'build_run'
 
 
 def passed(runs):
