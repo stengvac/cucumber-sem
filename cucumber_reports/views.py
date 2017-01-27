@@ -100,8 +100,22 @@ class BuildOverTimeStatisticsView(generic.TemplateView):
         return super(BuildOverTimeStatisticsView, self).dispatch(request, args, kwargs)
 
 
-class StatisticOverviewView(generic.TemplateView):
-    template_name = 'statistics/overall.html'
+class StatisticBuildOverTimeView(generic.TemplateView):
+    template_name = 'statistics/build_over_time.html'
+    name = None
+
+
+    def get_context_data(self, **kwargs):
+        context = super(StatisticBuildOverTimeView, self).get_context_data(**kwargs)
+        context['name'] = self.name
+
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        self.name = kwargs.get('name')
+
+        return super(StatisticBuildOverTimeView, self).dispatch(request, args, kwargs)
+
 
 
 class BuildRunStatisticsView(generic.TemplateView):
@@ -125,15 +139,35 @@ class BuildRunStatisticsView(generic.TemplateView):
         return super(BuildRunStatisticsView, self).dispatch(request, args, kwargs)
 
 
+class StatisticsBuildOverviewView(generic.ListView):
+    template_name = 'statistics/overview_allbuild.html'
+    queryset = dao.find_n_build_runs(5)
+    context_object_name = 'builds'
+
+    def get_queryset(self):
+        return self.queryset
+
+
 def render_img(request):
-    # plt.plot([1, 2, 3, 4])
-    #plt.ylabel('nums')
-    #... code to generate fig for ploting - works well
+    name = 'project'
+    print('img called')
+    runs = dao.development_over_time(name)
+    numbers = []
+    steps_passed = []
+    for run in runs:
+        numbers.append(run.metadata.number)
+        steps_passed.append(run.steps_passed)
+
+    print('plot data')
+    print(numbers)
+    print(steps_passed)
+
     fig = Figure()
     canvas = FigureCanvas(fig)
+
     ax = fig.add_subplot(111)
-    ax.plot([1, 2, 3, 4])
-    #This works but does not seem to pass file to HTML
+    fig.gca().set_color_cycle(['green', 'red', 'grey'])
+    ax.plot(numbers, steps_passed)
 
     response = HttpResponse(content_type='image/png')
     canvas.print_png(response)

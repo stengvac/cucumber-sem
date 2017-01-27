@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% load filters %}
+
+{% block content %}
+    <h1>Builds</h1>
+    <table class="table">
+    <thead>
+    <tr>
+        <td>Build name</td>
+        <td></td>
+        <td></td>
+    </tr>
+    </thead>
+    {% for build in builds %}
+        <tr>
+        <td>{{ build.name }}
+              <ul class="list-unstyled">
+                        {% for run in build.runs %}
+                                <li class="col-sm-offset-1">
+                                    <a class="text-{{ run.passed|success }}" href="{% url 'statistics_build' name=build.name number=run.number %}">
+                                        {{ run.number }} ({{ run.build_at|date }})
+                                    </a>
+                                </li>
+                        {% endfor  %}
+                    </ul>
+        </td>
+        <td>
+            <a href="{% url 'statistics_overall' name=build.name %}">Overall statistics</a>
+        </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

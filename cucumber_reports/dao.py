@@ -52,7 +52,7 @@ def find_n_build_runs(times):
 
 
 def development_over_time(build_name):
-    builds = models.BuildRun.objects.all().filter(build_name=build_name)
+    builds = models.BuildRun.objects.all().filter(build_name=build_name).order_by('build_number')
 
     res = []
 
@@ -62,13 +62,13 @@ def development_over_time(build_name):
         definitions = 0
         steps = 0
         passed_steps = 0
-        for feature in build.features:
+        for feature in build.features.iterator():
             features += 1
-            for definition in feature.scenario_definitions:
+            for definition in feature.scenario_definitions.iterator():
                 definitions += 1
-                for run in definition.scenario_runs:
+                for run in definition.scenario_runs.iterator():
                     runs += 1
-                    for step in run.step_runs:
+                    for step in run.step_runs.iterator():
                         steps += 1
                         if step.status == models.StepStatus[0][1]:
                             passed_steps += 1

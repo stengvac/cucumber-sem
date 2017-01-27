@@ -31,6 +31,7 @@ class BuildRun(models.Model):
 class Feature(models.Model):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=500)
+    glue = models.CharField(max_length=200)
     build_run = models.ForeignKey(BuildRun, related_name='features')
 
     def passed(self):
@@ -44,7 +45,7 @@ class ScenarioDefinition(models.Model):
     name = models.CharField(max_length=200)
     type = models.CharField(max_length=1, choices=ScenarioType)
     feature = models.ForeignKey(Feature, related_name='scenario_definitions')
-    # description = models.CharField(max_length=300, null=True, blank=True)
+    description = models.CharField(max_length=300, null=True, blank=True)
 
     def passed(self):
         return passed(self.scenario_runs.iterator())
@@ -54,7 +55,6 @@ class ScenarioDefinition(models.Model):
 
 
 class ScenarioRun(models.Model):
-    name = models.CharField(max_length=200)
     scenario_definition = models.ForeignKey(ScenarioDefinition, related_name='scenario_runs')
 
     def passed(self):
@@ -83,7 +83,7 @@ class StepRun(models.Model):
         return self.status == StepStatus[0][1]
 
     def __str__(self):
-        return '{}'.format(self.duration)
+        return '{}-{}'.format(self.status, self.duration)
 
 
 def passed(runs):

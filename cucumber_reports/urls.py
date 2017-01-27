@@ -13,7 +13,7 @@ urlpatterns = [
 
     #Statistics
     url(r'statistics/img/temp.png$', views.render_img, name='img'),
-    url(r'statistics/overall$', views.StatisticOverviewView.as_view(), name='overall'),
     url(r'statistics/build/(?P<name>[\w]+)/(?P<number>[\w]+)/$', views.BuildRunStatisticsView.as_view(), name='statistics_build'),
-    url(r'statistics/overall$', views.StatisticOverviewView.as_view(), name='statistics_overview'),
+    url(r'statistics/overall/(?P<name>[\w]+)$', views.StatisticBuildOverTimeView.as_view(), name='statistics_overall'),
+    url(r'statistics/overview$', views.StatisticsBuildOverviewView.as_view(), name='statistics_overview'),
 ]
