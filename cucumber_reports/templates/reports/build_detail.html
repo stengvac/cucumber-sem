@@ -1,8 +1,9 @@
 {% extends 'layout.html' %}
+{% load filters %}
 
 {% block content %}
     <h1>Build detail</h1>
-    <dl>
+    <dl class="dl-horizontal">
         <dt>Name</dt>
         <dd>{{ build.metadata.name }}</dd>
 
@@ -19,11 +20,15 @@
         </tr>
         </thead>
         <tbody>
-            {% for feature in build.features %}
-                <tr>
-                    <a href="{% url 'reports_feature_detail' build_name=build.metadata.name build_number=build.metadata.number feature=feature.name %}">{{ feature.name }}</a></tr>
-                </tr>
-            {% endfor %}
+        {% for feature in build.features %}
+            <tr>
+                <td>
+                    <a class="text-{{ feature.passed|success }}"
+                       href="{% url 'reports_feature_detail' build_name=build.metadata.name build_number=build.metadata.number feature=feature.name %}">{{ feature.name }}</a>
+                </td>
+            </tr>
+        {% endfor %}
+
         </tbody>
     </table>
 

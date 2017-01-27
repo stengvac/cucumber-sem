@@ -2,12 +2,14 @@
 <head>
     {# Load the tag library #}
     {% load bootstrap3 %}
+    {% load static %}
 
     {# Load CSS and JavaScript #}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static "cucumber_reports/style.css" %}">
 </head>
 <body>
 <div class="content">
