@@ -4,12 +4,13 @@ from enum import Enum
 class Statement:
     """
     Statement - super class for nearly all feature objects
-
-    name - name of statement.
-    description - more detailed text about statement
     """
     def __init__(self, name, description):
-        """Instance initialization"""
+        """
+
+        :param name: name of statement
+        :param description: more detailed text about statement
+        """
         self.name = name
         self.description = description
 
@@ -18,12 +19,13 @@ class BuildRunReport:
     """
     View model for: report of build run. Contains build run metadata like build_name, build_number and results of executed features
     in this build run.
-
-    metadata - build run metadata
-    features - reports of executed feature files in this build run
     """
     def __init__(self, metadata, features):
-        """Instance initialization"""
+        """
+
+        :param metadata: build run metadata
+        :param features: reports of executed feature files in this build run
+        """
         self.metadata = metadata
         self.features = features
 
@@ -31,14 +33,15 @@ class BuildRunReport:
 class BuildRunMetadata:
     """
     View model for: build run metadata.
-
-    name - build run name
-    number - build run sequence number
-    build_at - data of build execution
-    passed - true when whole build run does not contain any failed feature runs
     """
     def __init__(self, name, number, build_at, passed):
-        """Instance initialization"""
+        """
+
+        :param name: build run name
+        :param number: build run sequence number
+        :param build_at: data of build execution
+        :param passed: true when whole build run does not contain any failed feature runs
+        """
         self.name = name
         self.number = number
         self.build_at = build_at
@@ -48,13 +51,16 @@ class BuildRunMetadata:
 class FeatureReport(Statement):
     """
     View model for: Feature report. Feature report mirror feature execution in build run.
-
-    build_metadata
-    scenario_definitions - Definitions of all scenarios present in feature file
-    background - Background definition (not necessary present)
     """
     def __init__(self, name, description, definitions, background, build_metadata):
-        """Instance initialization"""
+        """
+
+        :param name: feature name
+        :param description: feature description
+        :param definitions: scenario_definitions - Definitions of all scenarios present in feature file
+        :param background: Background definition (not necessary present)
+        :param build_metadata:
+        """
         super().__init__(name, description)
         self.build_metadata = build_metadata
         self.scenario_definitions = definitions
@@ -69,12 +75,15 @@ class ScenarioDefinitionReport(Statement):
     """
     View model for: Scenario definition report. Contains steps definitions and its executions in scenario runs
     (some scenarios can be executed multiple times with different data sets).
-
-    runs - scenario definition executions
-    type - of scenario definition
     """
     def __init__(self, name, description, runs, type):
-        """Instance initialization"""
+        """
+
+        :param name: scenario name
+        :param description: scenario description
+        :param runs: scenario definition executions
+        :param type: of scenario definition
+        """
         super().__init__(name, description)
         self.runs = runs
         self.type = type
@@ -91,12 +100,13 @@ class ScenarioDefinitionReport(Statement):
 class ScenarioRun:
     """
     View model for: Scenario run report. Contains scenario and background step runs - results of step esecution.
-
-    step_runs - scenario step runs
-    bg_steps - background step runs
     """
     def __init__(self, steps, bg_steps):
-        """Instance initialization"""
+        """
+
+        :param steps: scenario step runs
+        :param bg_steps: background step runs
+        """
         self.step_runs = steps
         self.bg_steps = bg_steps
 
@@ -115,6 +125,13 @@ class StepDefinition(Statement):
 class StepRun:
     """Represent step run of associated step definition"""
     def __init__(self, definition, status, duration, error_msg):
+        """
+
+        :param definition: associated step definition
+        :param status: step execution result
+        :param duration: duration of step execution
+        :param error_msg: msg what went wrong
+        """
         self.step_def = definition
         self.duration = duration
         self.error_msg = error_msg
@@ -154,15 +171,16 @@ class ScenarioType(Enum):
 class BuildOverTimeDevelopmentStatistics:
     """
     View model for: Build runs over time development.
-
-    feature_count - number of executed feature files in build run
-    step_runs - number of executed step runs in build run
-    features_passed - count of passed features ie there is no failure in their execution
-    steps_passed - number of passed steps from all step executions
-    metadata - build run metadata so we can tell source of data
     """
     def __init__(self, step_runs, features_cnt, features_passed, steps_passed, meta):
-        """Instance initialization"""
+        """
+
+        :param step_runs:  number of executed step runs in build run
+        :param features_cnt: number of executed feature files in build run
+        :param features_passed: count of passed features ie there is no failure in their execution
+        :param steps_passed: number of passed steps from all step executions
+        :param meta: build run metadata so we can tell source of data
+        """
         self.features_cnt = features_cnt
         self.step_runs = step_runs
         self.features_passed = features_passed
@@ -174,11 +192,13 @@ class OverViewReport:
     """
     View model for: Builds overview report.
 
-    name - project name
     runs - last n build runs
     """
     def __init__(self, name):
-        """Instance initialization"""
+        """
+
+        :param name: project name
+        """
         self.name = name
         self.runs = []
 
@@ -186,12 +206,13 @@ class OverViewReport:
 class BuildRunStatistics:
     """
     View model for: Build run statistics.
-
-    metadata - build run metadata
-    feature_statistics = statistics about features executed during build
     """
     def __init__(self, metadata, features):
-        """Instance initialization"""
+        """
+
+        :param metadata: build run metadata
+        :param features: statistics about features executed during build
+        """
         self.metadata = metadata
         self.feature_statistics = features
 
@@ -199,15 +220,15 @@ class BuildRunStatistics:
 class FeatureStatistic:
     """
     View model for: Feature statistics.
-
-    name - feature name
-    step_cnt - count of steps definitions inside feature also include background steps
-    step_run_cnt - number of step executions
-    step_passed_cnt - count of passed steps
-    step_failed_cnt - total - passed steps
-
     """
     def __init__(self, name, step_cnt, step_run_cnt, step_passed_cnt):
+        """
+
+        :param name: feature name
+        :param step_cnt: count of steps definitions inside feature also include background steps
+        :param step_run_cnt: number of step executions
+        :param step_passed_cnt: count of passed steps
+        """
         self.name = name
         self.step_cnt = step_cnt
         self.step_run_cnt = step_run_cnt

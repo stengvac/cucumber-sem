@@ -9,11 +9,13 @@ def convert_build_run(build_run):
 
 
 def convert_build_metadata(build_run):
+    """Convert build run to build run metadata"""
     return view_models.BuildRunMetadata(build_run.build_name, build_run.build_number,
                                         build_run.build_at, build_run.passed())
 
 
 def convert_feature_metadata(feature):
+    """Convert feature to its metadata"""
     return view_models.Statement(feature.name, feature.description)
 
 
