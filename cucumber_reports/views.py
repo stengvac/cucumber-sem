@@ -148,19 +148,13 @@ class StatisticsBuildOverviewView(generic.ListView):
         return self.queryset
 
 
-def render_img(request):
-    name = 'project'
-    print('img called')
+def render_img(request, name):
     runs = dao.development_over_time(name)
     numbers = []
     steps_passed = []
     for run in runs:
         numbers.append(run.metadata.number)
         steps_passed.append(run.steps_passed)
-
-    print('plot data')
-    print(numbers)
-    print(steps_passed)
 
     fig = Figure()
     canvas = FigureCanvas(fig)
