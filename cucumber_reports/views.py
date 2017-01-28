@@ -8,14 +8,19 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 
-
-
 class IndexView(generic.TemplateView):
+    """Index view render only static template."""
     template_name = 'index.html'
 
 
 class ReportsOverView(generic.ListView):
-    """Represent view for reports overview"""
+    """
+    Back end of reports section welcome page.
+
+    template_name - template used to render output
+    queryset - field with models objects
+    context_object_name - name of context object in template
+    """
     template_name = 'reports/overview.html'
     queryset = dao.find_n_build_runs(5)
     context_object_name = 'latest_builds'
@@ -25,33 +30,53 @@ class ReportsOverView(generic.ListView):
         return self.queryset
 
 
-class BuildDetailView(generic.TemplateView):
-    """Represent view for build detail"""
+class BuildDetailReportView(generic.TemplateView):
+    """
+    Represent view for build detail report.
+
+    template_name - template used to render output
+    queryset - field with models objects
+    context_object_name - name of context object in template
+    name - name of build run/project
+    number - sequential number of build execution
+    """
     template_name = 'reports/build_detail.html'
     context_object_name = 'build'
     name = None
     number = None
-    model = view_models.BuildRunReport
 
     def get_context_data(self, **kwargs):
-        context = super(BuildDetailView, self).get_context_data(**kwargs)
-        context['build'] = self.get_queryset()
+        """Create context with defined object name for template rendering"""
+        context = super(BuildDetailReportView, self).get_context_data(**kwargs)
+        context[self.context_object_name] = self.get_queryset()
 
         return context
 
     def get_queryset(self):
+        """Obtain query set for given args."""
         return dao.find_build_run(self.name, self.number)
 
     def dispatch(self, request, *args, **kwargs):
+        """From provided args obtain url parameters and set them info name and number fields"""
         self.name = kwargs.get('name')
         self.number = kwargs.get('number')
 
-        return super(BuildDetailView, self).dispatch(request, args, kwargs)
+        return super(BuildDetailReportView, self).dispatch(request, args, kwargs)
 
 
 class FeatureReportView(generic.TemplateView):
-    """Represent view for feature report"""
+    """
+    Feature report backing view.
+
+    template_name - template used to render output
+    queryset - field with models objects
+    context_object_name - name of context object in template
+    build_name - name of build run/project which contains requested feature
+    build_number - sequential number of build execution
+    feature_name - name of feature within specified build
+    """
     template_name = 'reports/feature_detail.html'
+    context_object_name = 'feature'
     build_name = None
     build_number = None
     feature_name = None
@@ -61,12 +86,14 @@ class FeatureReportView(generic.TemplateView):
         return dao.find_feature(self.build_name, self.build_number, self.feature_name)
 
     def get_context_data(self, **kwargs):
+        """Create context with context object"""
         context = super(FeatureReportView, self).get_context_data(**kwargs)
-        context['feature'] = self.get_queryset()
+        context[self.context_object_name] = self.get_queryset()
 
         return context
 
     def dispatch(self, request, *args, **kwargs):
+        """From provided args obtain url parameters and set them info build_name, build_number and feature and fields"""
         self.build_name = kwargs.get('build_name')
         self.build_number = kwargs.get('build_number')
         self.feature_name = kwargs.get('feature')
@@ -74,65 +101,59 @@ class FeatureReportView(generic.TemplateView):
         return super(FeatureReportView, self).dispatch(request, args, kwargs)
 
 
-class BuildOverTimeStatisticsView(generic.TemplateView):
-    template_name = 'statistics/build_over_time.html'
-    build_name = None
+class StatisticsBuildOverTimeView(generic.TemplateView):
+    """
+    Backend for project builds in time development.
 
-    def get_context_data(self, **kwargs):
-        context = super(BuildOverTimeStatisticsView, self).get_context_data(**kwargs)
-        builds = self.get_queryset()
-        df = read_frame(builds)
-        #
-        # graphic = cStringIO.StringIO()
-        # canvas.print_png(graphic)
-        # return render(request, 'graphic.html', {'graphic': graphic})
-
-        context['stat'] = df.plot()
-
-        return context
-
-    def get_queryset(self):
-        return dao.development_over_time(self.build_name)
-
-    def dispatch(self, request, *args, **kwargs):
-        self.build_name = kwargs.get('name')
-
-        return super(BuildOverTimeStatisticsView, self).dispatch(request, args, kwargs)
-
-
-class StatisticBuildOverTimeView(generic.TemplateView):
+    template_name - template used to render output
+    name - name of build run/project
+    context_object_name - name of object with data inside template
+    """
     template_name = 'statistics/build_over_time.html'
     name = None
-
+    context_object_name = 'build_name'
 
     def get_context_data(self, **kwargs):
-        context = super(StatisticBuildOverTimeView, self).get_context_data(**kwargs)
-        context['name'] = self.name
+        """Obtain context from args and add data object to context with context_objects_name as its name."""
+        context = super(StatisticsBuildOverTimeView, self).get_context_data(**kwargs)
+        context[self.context_object_name] = self.name
 
         return context
 
     def dispatch(self, request, *args, **kwargs):
+        """From provided args obtain url parameters and set them into name field"""
         self.name = kwargs.get('name')
 
-        return super(StatisticBuildOverTimeView, self).dispatch(request, args, kwargs)
-
+        return super(StatisticsBuildOverTimeView, self).dispatch(request, args, kwargs)
 
 
 class BuildRunStatisticsView(generic.TemplateView):
+    """
+    Backend for build execution statistics.
+
+    template_name - template used to render output
+    name - name of build run/project
+    number - sequential number of build execution
+    context_object_name - name of object with data inside template
+    """
     template_name = 'statistics/build_statistics.html'
     name = None
     number = None
+    context_object_name = 'build'
 
     def get_context_data(self, **kwargs):
+        """Obtain context from args and add data object to context with context_objects_name as its name."""
         context = super(BuildRunStatisticsView, self).get_context_data(**kwargs)
-        context['build'] = self.get_queryset()
+        context[self.context_object_name] = self.get_queryset()
 
         return context
 
     def get_queryset(self):
+        """Obtain query set to present."""
         return dao.build_run_statistics(self.name, self.number)
 
     def dispatch(self, request, *args, **kwargs):
+        """From provided args obtain url parameters and set them into name and number fields"""
         self.name = kwargs.get('name')
         self.number = kwargs.get('number')
 
@@ -140,6 +161,12 @@ class BuildRunStatisticsView(generic.TemplateView):
 
 
 class StatisticsBuildOverviewView(generic.ListView):
+    """
+      Backend for build execution statistics.
+
+      template_name - template used to render output
+       context_object_name - name of object with data inside template
+      """
     template_name = 'statistics/overview_allbuild.html'
     queryset = dao.find_n_build_runs(5)
     context_object_name = 'builds'
@@ -148,7 +175,8 @@ class StatisticsBuildOverviewView(generic.ListView):
         return self.queryset
 
 
-def render_img(request, name):
+def render_steps_passed_img(request, name):
+    """For given project name retrieve all its build runs and create graph with steps passed over all these runs."""
     runs = dao.development_over_time(name)
     numbers = []
     steps_passed = []

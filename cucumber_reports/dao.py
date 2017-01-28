@@ -73,7 +73,7 @@ def development_over_time(build_name):
                         if step.status == models.StepStatus[0][1]:
                             passed_steps += 1
         meta = view_models.BuildRunMetadata(build.build_name, build.build_number, build.build_at, None)
-        res.append(view_models.BuildOverTimeStatistics(steps, features, 0, passed_steps, meta))
+        res.append(view_models.BuildOverTimeDevelopmentStatistics(steps, features, 0, passed_steps, meta))
 
     return res
 
