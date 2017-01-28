@@ -1,5 +1,4 @@
-from django.conf.urls import url
-
+from django.conf.urls import url, handler404, handler500
 from . import views
 
 urlpatterns = [
@@ -16,4 +15,9 @@ urlpatterns = [
     url(r'statistics/build/(?P<name>[\w|\W]+)/(?P<number>[\w|\W]+)/$', views.BuildRunStatisticsView.as_view(), name='statistics_build'),
     url(r'statistics/overall/(?P<name>[\w|\W]+)$', views.StatisticsBuildOverTimeView.as_view(), name='statistics_overall'),
     url(r'statistics/overview$', views.StatisticsBuildOverviewView.as_view(), name='statistics_overview'),
+
 ]
+
+# Errors
+handler404 = 'cucumber_reports.views.http_error404'
+handler500 = 'cucumber_reports.views.http_error500'

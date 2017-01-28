@@ -1,20 +1,18 @@
 from . import models
 from .converters import *
+from django.http import Http404
 
 
 def _find_build_run(name, number):
     runs = models.BuildRun.objects.filter(build_name=name, build_number=number)
 
-    if runs.count() == 1:
-        return runs.first()
-    return None
+    if not runs or runs.count() == 0:
+        raise Http404('Build run for name: ({}) and number ({}) not found.'.format(name, number))
+    return runs.first()
 
 
 def find_build_run(name, number):
-    run = _find_build_run(name, number)
-    if run is None:
-        return None
-    return convert_build_run(run)
+    return convert_build_run(_find_build_run(name, number))
 
 
 def find_feature(build_name, build_number, feature_name):
@@ -24,12 +22,14 @@ def find_feature(build_name, build_number, feature_name):
         if feature.name == feature_name:
             return convert_feature_report(feature, build)
 
-    return None
+    raise Http404('Feature for build_name: ({}), build_number({}) and feature_name ({]) not found.'
+                  .format(build_name, build_number, feature_name))
 
 
 def find_n_build_runs(times):
 
     runs = models.BuildRun.objects.all()#.aggregate('build_name').order_by('build_number')
+
     res = []
     last_run = None
     name = None
@@ -53,6 +53,9 @@ def find_n_build_runs(times):
 
 def development_over_time(build_name):
     builds = models.BuildRun.objects.all().filter(build_name=build_name).order_by('build_number')
+
+    if not builds:
+        raise Http404('Build name: ({}) does not exist.'.format(build_name))
 
     res = []
 
@@ -107,6 +110,5 @@ def build_run_passed(build_run):
                     if step.status != models.StepStatus[0][1]:
                         return False
     return True
-
 
 

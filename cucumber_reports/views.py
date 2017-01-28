@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render, render_to_response
 from django.views import generic
 from . import dao
 from django_pandas.io import read_frame
@@ -6,7 +6,7 @@ from . import view_models
 from django.http import HttpResponse
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
-
+from django.template import RequestContext
 
 class IndexView(generic.TemplateView):
     """Index view render only static template."""
@@ -193,4 +193,28 @@ def render_steps_passed_img(request, name):
 
     response = HttpResponse(content_type='image/png')
     canvas.print_png(response)
+    return response
+
+
+def http_error404(request):
+    """Handle 404 status code."""
+    return handle_error(request, 'errors/http404.html', 404)
+
+
+def http_error500(request):
+    """Handle 500 status code."""
+    return handle_error(request, 'errors/http500.html', 500)
+
+
+def handle_error(request, template_path, status_code):
+    """
+    Handle http error.
+
+    request - to process
+    template_path - path to template
+    status_code - for response
+    """
+    response = render_to_response(template_path, context_instance=RequestContext(request))
+    response.status_code = status_code
+
     return response
