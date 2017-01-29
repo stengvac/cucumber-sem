@@ -55,7 +55,7 @@ def find_n_build_runs(times):
     :param times: max number of builds per project to include in results
     :return: list with project name and sublist with its found build runs
     """
-    runs = models.BuildRun.objects.all()#.aggregate('build_name').order_by('build_number')
+    runs = models.BuildRun.objects.all().aggregate(builds='build_name').order_by('build_number')
 
     res = []
     last_run = None
@@ -90,28 +90,7 @@ def development_over_time(build_name):
     if not builds:
         raise Http404('Build name: ({}) does not exist.'.format(build_name))
 
-    res = []
-
-    for build in builds:
-        features = 0
-        runs = 0
-        definitions = 0
-        steps = 0
-        passed_steps = 0
-        for feature in build.features.iterator():
-            features += 1
-            for definition in feature.scenario_definitions.iterator():
-                definitions += 1
-                for run in definition.scenario_runs.iterator():
-                    runs += 1
-                    for step in run.step_runs.iterator():
-                        steps += 1
-                        if step.status == models.StepStatus[0][1]:
-                            passed_steps += 1
-        meta = view_models.BuildRunMetadata(build.build_name, build.build_number, build.build_at, None)
-        res.append(view_models.BuildOverTimeDevelopmentStatistics(steps, features, 0, passed_steps, meta))
-
-    return res
+    return convert_development_over_time(builds)
 
 
 def build_run_statistics(name, number):

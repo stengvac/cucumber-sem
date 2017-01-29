@@ -1,7 +1,6 @@
 from cucumber_reports import converters
 from cucumber_reports import models, view_models
-from datetime import datetime, date
-import django
+from datetime import date
 import pytest
 
 BUILD_AT = date(2017, 1, 29)
@@ -31,8 +30,7 @@ def test_convert_build_metadata():
 @pytest.mark.django_db
 def test_convert_build_run():
     build_run = create_build_run()
-    feature = models.Feature.objects.create(name=FEATURE_NAME, description=FEATURE_DESC, build_run=build_run)
-    build_run.features = [feature]
+    create_feature(build_run)
 
     result = converters.convert_build_run(build_run)
 
@@ -52,12 +50,8 @@ def test_convert_feature_metadata():
     assert FEATURE_DESC == result.description
 
 
-def test_convert_feature_report():
-    pass
-
-
 def test_convert_step_definition():
-    result = converters.convert_step_definition(create_step_definition())
+    result = converters.convert_step_definition(models.StepDefinition(name=STEP_NAME, keyword=STEP_KEYWORD))
 
     assert result
     assert STEP_NAME == result.name
@@ -71,7 +65,7 @@ def test_convert_step_runs():
     run.error_msg = ERROR_MSG
     run.status = STEP_RESULT
 
-    result = converters.convert_step_runs([create_step_definition()], [run])
+    result = converters.convert_step_runs([models.StepDefinition(name=STEP_NAME, keyword=STEP_KEYWORD)], [run])
 
     assert result
     assert 1 == len(result)
@@ -97,9 +91,8 @@ def test_find_background():
 @pytest.mark.django_db
 def test_convert_scenario_definition():
 
-    scenario = models.ScenarioDefinition.objects.create(type=models.ScenarioType[1][1], name=SCENARIO_NAME,
-                                                        description=SCENARIO_DESC, feature=create_feature())
-    models.ScenarioRun.objects.create(scenario_definition=scenario)
+    scenario = create_scenario_definition(create_feature(create_build_run()), 'SCENARIO')
+    create_scenario_run(scenario)
 
     result = converters.convert_scenario_definition(scenario)
 
@@ -110,25 +103,84 @@ def test_convert_scenario_definition():
     assert 1 == len(result.runs)
 
 
+@pytest.mark.django_db
+def test_convert_build_run_statistics():
+    build_run = create_build_run()
+    feature = create_feature(build_run)
+    scenario_def = create_scenario_definition(feature, 'SCENARIO')
+    scenario_run = create_scenario_run(scenario_def)
+    create_step_run(scenario_run, 'FAILED')
+    create_step_run(scenario_run, 'PASSED')
+    create_step_definition(scenario_def)
+
+    result = converters.convert_build_run_statistics(build_run)
+
+    assert result
+    assert BUILD_NAME == result.metadata.name
+    assert 1 == len(result.feature_statistics)
+    feature_stats = result.feature_statistics[0]
+    assert FEATURE_NAME == feature_stats.name
+    assert 1 == feature_stats.step_cnt
+    assert 2 == feature_stats.step_run_cnt
+    assert 1 == feature_stats.step_passed_cnt
+    assert 1 == feature_stats.step_failed_cnt
+
+@pytest.mark.django_db
+def test_convert_development_over_time():
+    build_run = create_build_run()
+    feature = create_feature(build_run)
+    scenario_def = create_scenario_definition(feature, 'SCENARIO')
+    scenario_run = create_scenario_run(scenario_def)
+    create_step_run(scenario_run, 'PASSED')
+    create_step_run(scenario_run, 'PASSED')
+    create_step_definition(scenario_def)
+
+    build_run2 = create_build_run()
+    feature = create_feature(build_run2)
+    scenario_def = create_scenario_definition(feature, 'SCENARIO')
+    scenario_run = create_scenario_run(scenario_def)
+    create_step_run(scenario_run, 'FAILED')
+    create_step_definition(scenario_def)
+
+    result = converters.convert_development_over_time([build_run, build_run2])
+
+    assert 2 == len(result)
+    stat1 = result[0]
+    assert 1 == stat1.features_cnt
+    assert 2 == stat1.step_runs
+    assert 1 == stat1.features_passed
+    assert BUILD_NAME == stat1.metadata.name
+    assert stat1.metadata.passed
+    stat1 = result[1]
+    assert 1 == stat1.features_cnt
+    assert 1 == stat1.step_runs
+    assert 0 == stat1.features_passed
+    assert BUILD_NAME == stat1.metadata.name
+    assert not stat1.metadata.passed
+
+
 def create_build_run():
     return models.BuildRun.objects.create(build_name=BUILD_NAME, build_at=BUILD_AT, build_number=BUILD_NUMBER)
 
 
-def create_step_definition():
-    step = models.StepDefinition()
-    step.name = STEP_NAME
-    step.keyword = STEP_KEYWORD
-
-    return step
+def create_feature(build_run):
+    return models.Feature.objects.create(build_run=build_run, name=FEATURE_NAME, description=FEATURE_DESC)
 
 
-def test_convert_scenario_runs():
-    pass
+def create_scenario_definition(feature, type):
+    return models.ScenarioDefinition.objects.create(type=type, feature=feature,
+                                                    description=SCENARIO_DESC, name=SCENARIO_NAME)
 
 
-def create_scenario_run():
-    return models.ScenarioRun()
+def create_step_definition(scenario_definition):
+    return models.StepDefinition.objects.create(name=STEP_NAME, keyword=STEP_KEYWORD,
+                                                scenario_definition=scenario_definition)
 
 
-def create_feature():
-    return models.Feature.objects.create(build_run=create_build_run())
+def create_scenario_run(scenario_definition):
+    return models.ScenarioRun.objects.create(scenario_definition=scenario_definition)
+
+
+def create_step_run(scenario_run, status):
+    return models.StepRun.objects.create(duration=STEP_DURATION, status=status,
+                                         error_msg=ERROR_MSG, scenario_run=scenario_run)

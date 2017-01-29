@@ -102,6 +102,7 @@ def convert_build_run_statistics(build_run):
         step_run_cnt = 0
         step_passed_cnt = 0
         for definition in feature.scenario_definitions.iterator():
+            print(definition.step_definitions.count())
             for scenario_run in definition.scenario_runs.iterator():
                 for step_run in scenario_run.step_runs.iterator():
                     step_run_cnt += 1
@@ -112,6 +113,44 @@ def convert_build_run_statistics(build_run):
         feature_statistics.append(st)
 
     return view_models.BuildRunStatistics(convert_build_metadata(build_run), feature_statistics)
+
+
+def convert_development_over_time(builds):
+    """
+    Convert builds of one project to view models.
+
+    :param builds: to convert
+    :return: list of view model objects for statistics purposes
+    """
+    res = []
+
+    for build in builds:
+        features = 0
+        runs = 0
+        definitions = 0
+        steps = 0
+        passed_steps = 0
+        features_passed = 0
+        for feature in build.features.iterator():
+            features += 1
+            feature_passed_steps = 0
+            feature_steps = 0
+            for definition in feature.scenario_definitions.iterator():
+                definitions += 1
+                for run in definition.scenario_runs.iterator():
+                    runs += 1
+                    for step in run.step_runs.iterator():
+                        steps += 1
+                        feature_steps +=1
+                        if step.status == models.StepStatus[0][1]:
+                            passed_steps += 1
+                            feature_passed_steps += 1
+            if feature_passed_steps == feature_steps:
+                features_passed += 1
+        meta = view_models.BuildRunMetadata(build.build_name, build.build_number, build.build_at, features_passed == features)
+        res.append(view_models.BuildOverTimeDevelopmentStatistics(steps, features, features_passed, passed_steps, meta))
+
+    return res
 
 
 def _find_background(definitions):
