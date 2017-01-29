@@ -16,7 +16,7 @@ setup(
     packages=find_packages(),
     package_data={
         'cucumber_reports': [
-            'static/*',
+            'static/cucumber_reports/*',
             'templates/reports/*.html',
             'templates/statistics/*.html',
             'templates/errors/*.html'

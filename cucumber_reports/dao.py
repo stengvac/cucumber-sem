@@ -115,33 +115,12 @@ def development_over_time(build_name):
 
 
 def build_run_statistics(name, number):
-    run = _find_build_run(name, number)
-    feature_statistics = []
+    """
+    For given args try to find build run and return its statistics.
 
-    for feature in run.features.iterator():
-        step_cnt = 0
-        step_run_cnt = 0
-        step_passed_cnt = 0
-        for definition in feature.scenario_definitions.iterator():
-            for scenario_run in definition.scenario_runs.iterator():
-                for step_run in scenario_run.step_runs.iterator():
-                    step_run_cnt += 1
-                    if step_run.passed():
-                        step_passed_cnt += 1
-            step_cnt += definition.step_definitions.count()
-        st = view_models.FeatureStatistic(feature.name, feature.passed(), step_cnt, step_run_cnt, step_passed_cnt)
-        feature_statistics.append(st)
-
-    return view_models.BuildRunStatistics(convert_build_metadata(run), feature_statistics)
-
-
-def build_run_passed(build_run):
-    for feature in build_run.features:
-        for sc_def in feature.scenario_definitions:
-            for run in sc_def.scenario_runs:
-                for step in run.step_runs:
-                    if step.status != models.StepStatus[0][1]:
-                        return False
-    return True
-
+    :param name: build name
+    :param number: sequential build number
+    :return: statistics or throw Http404 if not found
+    """
+    return convert_build_run_statistics(_find_build_run(name, number))
 

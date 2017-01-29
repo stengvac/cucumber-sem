@@ -1,4 +1,5 @@
 from . import view_models
+from . import models
 
 
 def convert_build_run(build_run):
@@ -22,7 +23,7 @@ def convert_feature_metadata(feature):
 def convert_feature_report(feature, build):
     """Convert dao feature to feature report for view purposes"""
     definitions = list(feature.scenario_definitions.iterator())
-    bg = find_background(definitions)
+    bg = _find_background(definitions)
     converted_bg = None
     bg_steps = []
     converted_definitions = []
@@ -55,8 +56,8 @@ def convert_feature_report(feature, build):
 def convert_scenario_definition(definition):
     """Convert scenario definition to view scenario definition"""
     runs = convert_scenario_runs(definition)
-    return view_models.ScenarioDefinitionReport(definition.name, 'Desc placeholder', runs,
-                                          view_models.ScenarioType.from_string(definition.type))
+    return view_models.ScenarioDefinitionReport(definition.name, definition.description, runs,
+                                                view_models.ScenarioType.from_string(definition.type))
 
 
 def convert_step_definition(step):
@@ -81,16 +82,47 @@ def convert_step_runs(step_definitions, step_runs):
     index = 0
     for run in step_runs:
         status = view_models.StepStatus.from_string(run.status)
-        res.append(view_models.StepRun(status, step_definitions[index], run.duration, run.error_msg))
+        res.append(view_models.StepRun(step_definitions[index], status, run.duration, run.error_msg))
         index += 1
 
     return res
 
 
-def find_background(definitions):
-    """Find background within definitions. If not present return None"""
+def convert_build_run_statistics(build_run):
+    """
+    From provided build run create statistics object.
+
+    :param build_run: to convert
+    :return: view object to present statistics
+    """
+    feature_statistics = []
+
+    for feature in build_run.features.iterator():
+        step_cnt = 0
+        step_run_cnt = 0
+        step_passed_cnt = 0
+        for definition in feature.scenario_definitions.iterator():
+            for scenario_run in definition.scenario_runs.iterator():
+                for step_run in scenario_run.step_runs.iterator():
+                    step_run_cnt += 1
+                    if step_run.passed():
+                        step_passed_cnt += 1
+            step_cnt += definition.step_definitions.count()
+        st = view_models.FeatureStatistic(feature.name, step_cnt, step_run_cnt, step_passed_cnt)
+        feature_statistics.append(st)
+
+    return view_models.BuildRunStatistics(convert_build_metadata(build_run), feature_statistics)
+
+
+def _find_background(definitions):
+    """
+    Find background within definitions.
+
+    :param definitions: to search by
+    :return: background instance or None if not found
+    """
     for x in definitions:
-        if x.type == 'BACKGROUND':
+        if x.type == models.ScenarioType[2][1]:
             return x
     return None
 
