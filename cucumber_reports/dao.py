@@ -55,7 +55,7 @@ def find_n_build_runs(times):
     :param times: max number of builds per project to include in results
     :return: list with project name and sublist with its found build runs
     """
-    runs = models.BuildRun.objects.all().aggregate(builds='build_name').order_by('build_number')
+    runs = models.BuildRun.objects.all().order_by('build_name').order_by('build_number')
 
     return convert_last_n_build_runs(runs, times)
 
