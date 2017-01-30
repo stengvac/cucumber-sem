@@ -221,7 +221,7 @@ class FeatureStatistic:
     """
     View model for: Feature statistics.
     """
-    def __init__(self, name, step_cnt, step_run_cnt, step_passed_cnt):
+    def __init__(self, name, step_cnt, step_run_cnt, step_passed_cnt, scenario_definitions, scenario_runs):
         """
 
         :param name: feature name
@@ -234,7 +234,8 @@ class FeatureStatistic:
         self.step_run_cnt = step_run_cnt
         self.step_passed_cnt = step_passed_cnt
         self.step_failed_cnt = step_run_cnt - step_passed_cnt
-        self.scenario_def_cnt = None
+        self.scenario_def_cnt = scenario_definitions
+        self.scenario_run_cnt = scenario_runs
 
     def passed(self):
         """Feature passed if number of steps runs eq number of passed steps"""

@@ -101,15 +101,19 @@ def convert_build_run_statistics(build_run):
         step_cnt = 0
         step_run_cnt = 0
         step_passed_cnt = 0
+        scenario_runs = 0
+        scenario_defs = 0
         for definition in feature.scenario_definitions.iterator():
-            print(definition.step_definitions.count())
+            scenario_defs += 1
             for scenario_run in definition.scenario_runs.iterator():
+                scenario_runs += 1
                 for step_run in scenario_run.step_runs.iterator():
                     step_run_cnt += 1
                     if step_run.passed():
                         step_passed_cnt += 1
             step_cnt += definition.step_definitions.count()
-        st = view_models.FeatureStatistic(feature.name, step_cnt, step_run_cnt, step_passed_cnt)
+        st = view_models.FeatureStatistic(feature.name, step_cnt, step_run_cnt,
+                                          step_passed_cnt, scenario_defs, scenario_runs)
         feature_statistics.append(st)
 
     return view_models.BuildRunStatistics(convert_build_metadata(build_run), feature_statistics)

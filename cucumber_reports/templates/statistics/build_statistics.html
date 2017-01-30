@@ -4,7 +4,7 @@
 {% block content %}
     <h1>Build statistics</h1>
 
-   <dl>
+   <dl class="dl-horizontal">
         <dt>Name</dt>
         <dd>{{ build.metadata.name }}</dd>
 
@@ -18,7 +18,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Name</th>
+                <th>Feature name</th>
                 <th>Step definitions</th>
                 <th>Step runs/Passed</th>
             </tr>

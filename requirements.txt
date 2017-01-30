@@ -1,0 +1,9 @@
+django
+numpy
+pandas
+django-pandas
+django-bootstrap3
+matplotlib
+pytest-runner
+pytest
+pytest-django

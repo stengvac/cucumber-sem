@@ -38,6 +38,9 @@ class BuildRun(models.Model):
     def __str__(self):
         return '{} {}'.format(self.build_name, self.build_number)
 
+    class Meta:
+        ordering = ['build_name', 'build_number']
+
 
 class Feature(models.Model):
     """
@@ -96,6 +99,10 @@ class ScenarioRun(models.Model):
     def passed(self):
         """Return True when all executed steps have status PASSED"""
         return passed(self.step_runs.iterator())
+
+    def __str__(self):
+        """Scenario definition string representation - name and type"""
+        return '{} {}'.format(self.scenario_definition.name, self.scenario_definition.type)
 
 
 class StepDefinition(models.Model):

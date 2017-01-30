@@ -2,13 +2,12 @@
 {% load filters %}
 
 {% block content %}
-    <h1>Builds</h1>
+    <h1>Statistics - registered projects</h1>
     <table class="table">
     <thead>
     <tr>
-        <td>Build name</td>
-        <td></td>
-        <td></td>
+        <td>Build name (Build run)</td>
+        <td>Overall project statistics</td>
     </tr>
     </thead>
     {% for build in builds %}
@@ -25,7 +24,7 @@
                     </ul>
         </td>
         <td>
-            <a href="{% url 'statistics_overall' name=build.name %}">Overall statistics</a>
+            <a href="{% url 'statistics_overall' name=build.name %}">Overall statistics for  {{ build.name }}</a>
         </td>
         </tr>
     {% endfor %}
