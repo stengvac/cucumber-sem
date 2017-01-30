@@ -40,6 +40,7 @@ class BuildRun(models.Model):
 
     class Meta:
         ordering = ['build_name', 'build_number']
+        managed = True
 
 
 class Feature(models.Model):
@@ -64,6 +65,9 @@ class Feature(models.Model):
         """String representation - feature name"""
         return '{}'.format(self.name)
 
+    class Meta:
+        managed = True
+
 
 class ScenarioDefinition(models.Model):
     """
@@ -87,6 +91,9 @@ class ScenarioDefinition(models.Model):
         """Scenario definition string representation - name and type"""
         return '{} {}'.format(self.name, self.type)
 
+    class Meta:
+        managed = True
+
 
 class ScenarioRun(models.Model):
     """
@@ -103,7 +110,10 @@ class ScenarioRun(models.Model):
     def __str__(self):
         """Scenario definition string representation - name and type"""
         return '{} -  {} - {}'.format(self.scenario_definition.feature.name,
-                                 self.scenario_definition.name, self.scenario_definition.type)
+                                      self.scenario_definition.name, self.scenario_definition.type)
+
+    class Meta:
+        managed = True
 
 
 class StepDefinition(models.Model):
@@ -125,6 +135,9 @@ class StepDefinition(models.Model):
     def __str__(self):
         """String representation - keyword and name"""
         return '{} {}'.format(self.keyword, self.name)
+
+    class Meta:
+        managed = True
 
 
 class StepRun(models.Model):
@@ -148,6 +161,9 @@ class StepRun(models.Model):
     def __str__(self):
         """String representation status and duration"""
         return '{}-{}-{}'.format(self.scenario_run.scenario_definition.name, self.status, self.duration)
+
+    class Meta:
+        managed = True
 
 
 def passed(runs):
