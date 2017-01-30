@@ -29,6 +29,7 @@ setup(
         'django-pandas',
         'django-bootstrap3',
         'matplotlib',
+        'whitenoise'
     ],
     setup_requires=[
         'pytest-runner',

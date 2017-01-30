@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cucumber_reports',
     'bootstrap3',
+    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
