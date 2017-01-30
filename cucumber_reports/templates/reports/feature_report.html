@@ -2,22 +2,24 @@
 {% load filters %}
 
 {% block content %}
-    <h1>Feature detail</h1>
-    {{ feature.build_metadata.name }}-{{ feature.build_metadata.number }}  {{ feature.build_metadata.build_at }}
+    <h1 class="text-{{ feature.passed|success }}">Feature report page</h1>
+
     <div class="row">
         <div class="col-md-6">
+            <h2>Feature metadata</h2>
             <dl class="dl-horizontal">
                 <dt>Feature Name</dt>
                 <dd>{{ feature.name }}</dd>
 
                 <dt>Description</dt>
-                <dd>{{ feature.build_metadata.number }}</dd>
+                <dd>{{ feature.description }}</dd>
 
-                <dt>Build at</dt>
-                <dd>{{ feature.build_metadata.build_at }}</dd>
+                <dt>Glue</dt>
+                <dd>{{ feature.glue }}</dd>
             </dl>
         </div>
         <div class="col-md-6">
+            <h2>Build metadata</h2>
             <dl class="dl-horizontal">
                 <dt>Name</dt>
                 <dd>{{ feature.build_metadata.name }}</dd>
@@ -30,10 +32,17 @@
             </dl>
         </div>
     </div>
+
+    {% if feature.background %}
+        <h2>Background: {{ feature.background.name }}</h2>
+        <p>{{ feature.background.description }}</p>
+    {% endif %}
+
+    <h2>Present scenarios</h2>
     {% for definition in feature.scenario_definitions %}
         {% for run in definition.runs %}
             <div class="bs-callout bs-callout-{{ run.passed|success }}">
-                <h4>Feature name:{{ definition.name }}</h4>
+                <h4>Definition name: {{ definition.name }}</h4>
                 {% if feature.background %}
                     <div>
                         <h3>Background</h3>
@@ -50,10 +59,15 @@
                     <h3>Background steps</h3>
                     <dl class="dl-horizontal">
                         {% for step in run.bg_steps %}
-                            <dt>{{ step.step_def.keyword }}</dt>
-                            <dd class="bd-callout-{{ run.passed|success }}">{{ step.step_def.name }}
-                                ({{ step.duration }})
+                            <dt class="text-{{ step.passed|success }}">{{ step.step_def.keyword }}</dt>
+                            <dd>{{ step.step_def.name }}
+                                ({{ step.duration|duration }})
                             </dd>
+                            {% if step.error_msg %}
+                                <pre>
+                                    {{ step.error_msg }}
+                                </pre>
+                            {% endif %}
                         {% endfor %}
                     </dl>
                 {% endif %}
@@ -61,9 +75,14 @@
                 <h3>Steps</h3>
                 <dl class="dl-horizontal">
                     {% for step in run.step_runs %}
-                        <dt>{{ step.step_def.keyword }}</dt>
-                        <dd class="bd-callout-{{ run.passed|success }}">{{ step.step_def.name }} ({{ step.duration }})
+                        <dt class="text-{{ step.passed|success }}">{{ step.step_def.keyword }}</dt>
+                        <dd>{{ step.step_def.name }} ({{ step.duration|duration }} sec)
                         </dd>
+                        {% if step.error_msg %}
+                            <pre>
+                                {{ step.error_msg }}
+                            </pre>
+                        {% endif %}
                     {% endfor %}
                 </dl>
             </div>

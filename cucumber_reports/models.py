@@ -142,11 +142,11 @@ class StepRun(models.Model):
 
     def passed(self):
         """Return True when status is PASSED"""
-        return self.status == StepStatus[0][1]
+        return self.status == StepStatus[0][0]
 
     def __str__(self):
         """String representation status and duration"""
-        return '{}-{}'.format(self.status, self.duration)
+        return '{}-{}-{}'.format(self.scenario_run.scenario_definition.name, self.status, self.duration)
 
 
 def passed(runs):

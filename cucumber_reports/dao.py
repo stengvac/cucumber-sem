@@ -44,7 +44,7 @@ def find_feature(build_name, build_number, feature_name):
         if feature.name == feature_name:
             return convert_feature_report(feature, build)
 
-    raise Http404('Feature for build_name: ({}), build_number({}) and feature_name ({]) not found.'
+    raise Http404('Feature for build_name: ({}), build_number({}) and feature_name ({}) not found.'
                   .format(build_name, build_number, feature_name))
 
 

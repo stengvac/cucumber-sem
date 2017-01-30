@@ -30,6 +30,16 @@ class BuildRunReport:
         self.features = features
 
 
+class FeatureMetadata(Statement):
+    """
+    Metadata about feature
+    """
+
+    def __init__(self, name, description, passed):
+        self.name = name
+        self.description = description
+        self.passed = passed
+
 class BuildRunMetadata:
     """
     View model for: build run metadata.
@@ -52,7 +62,7 @@ class FeatureReport(Statement):
     """
     View model for: Feature report. Feature report mirror feature execution in build run.
     """
-    def __init__(self, name, description, definitions, background, build_metadata):
+    def __init__(self, name, description, definitions, background, build_metadata, glue):
         """
 
         :param name: feature name
@@ -65,6 +75,7 @@ class FeatureReport(Statement):
         self.build_metadata = build_metadata
         self.scenario_definitions = definitions
         self.background = background
+        self.glue = glue
 
     def passed(self):
         """Return true when all scenario definitions with all their runs finished without failures"""
@@ -139,6 +150,7 @@ class StepRun:
 
     def passed(self):
         """Step run passed when its status eq PASSED otherwise run failed"""
+        print(self.status == StepStatus.PASSED)
         return StepStatus.PASSED == self.status
 
 
@@ -153,19 +165,25 @@ class StepStatus(Enum):
     @classmethod
     def from_string(cls, value):
         """Return enum value for string value. Return None if enum not found or ars is None."""
-        return getattr(cls, value, None)
+        for status in StepStatus:
+            if status.value[0] == value:
+                return status
+        return None
 
 
 class ScenarioType(Enum):
     """Type of scenario."""
-    SCENARIO = 'SCENARIO',
-    SCENARIO_OUTLINE = 'SCENARIO_OUTLINE',
-    BACKGROUND = 'BACKGROUND'
+    SCENARIO = 's',
+    SCENARIO_OUTLINE = 'o',
+    BACKGROUND = 'b'
 
     @classmethod
     def from_string(cls, value):
         """Return enum value for string value. Return None if enum not found or ars is None."""
-        return getattr(cls, value, None)
+        for type in ScenarioType:
+            if type.value[0] == value:
+                return type
+        return None
 
 
 class BuildOverTimeDevelopmentStatistics:

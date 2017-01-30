@@ -75,7 +75,7 @@ class FeatureReportView(generic.TemplateView):
     build_number - sequential number of build execution
     feature_name - name of feature within specified build
     """
-    template_name = 'reports/feature_detail.html'
+    template_name = 'reports/feature_report.html'
     context_object_name = 'feature'
     build_name = None
     build_number = None

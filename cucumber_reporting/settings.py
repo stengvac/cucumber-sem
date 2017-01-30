@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'cucumber_reporting.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite31'),
+        'NAME': os.path.join(BASE_DIR, 'example_db.sqlite3'),
     }
 }
 

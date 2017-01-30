@@ -17,7 +17,7 @@ def convert_build_metadata(build_run):
 
 def convert_feature_metadata(feature):
     """Convert feature to its metadata"""
-    return view_models.Statement(feature.name, feature.description)
+    return view_models.FeatureMetadata(feature.name, feature.description, feature.passed())
 
 
 def convert_feature_report(feature, build):
@@ -50,7 +50,8 @@ def convert_feature_report(feature, build):
                     run_index += 1
 
     build_meta = convert_build_metadata(build)
-    return view_models.FeatureReport(feature.name, feature.description, converted_definitions, converted_bg, build_meta)
+    return view_models.FeatureReport(feature.name, feature.description, converted_definitions,
+                                     converted_bg, build_meta, feature.glue)
 
 
 def convert_scenario_definition(definition):
