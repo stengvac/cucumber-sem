@@ -36,9 +36,15 @@ class FeatureMetadata(Statement):
     """
 
     def __init__(self, name, description, passed):
-        self.name = name
-        self.description = description
+        """
+        Instance initialization
+        :param name: feature name
+        :param description: feature description
+        :param passed: feature passed or not
+        """
+        super().__init__(name, description)
         self.passed = passed
+
 
 class BuildRunMetadata:
     """
@@ -150,7 +156,6 @@ class StepRun:
 
     def passed(self):
         """Step run passed when its status eq PASSED otherwise run failed"""
-        print(self.status == StepStatus.PASSED)
         return StepStatus.PASSED == self.status
 
 

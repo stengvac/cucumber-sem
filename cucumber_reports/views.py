@@ -1,12 +1,12 @@
 from django.shortcuts import render, render_to_response
 from django.views import generic
 from . import dao
-from django_pandas.io import read_frame
 from . import view_models
 from django.http import HttpResponse
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 from django.template import RequestContext
+import numpy
 
 class IndexView(generic.TemplateView):
     """Index view render only static template."""
@@ -175,34 +175,82 @@ class StatisticsBuildOverviewView(generic.ListView):
         return self.queryset
 
 
-def render_steps_passed_img(request, name):
-    """For given project name retrieve all its build runs and create graph with steps passed over all these runs."""
-    runs = dao.development_over_time(name)
-    numbers = []
-    steps_passed = []
+def create_bar(runs, executions_passed, executions_total, ylabel, legend):
+    build_numbers = []
     for run in runs:
-        numbers.append(run.metadata.number)
-        steps_passed.append(run.steps_passed)
+        build_numbers.append(run.metadata.number)
+    build_numbers = numpy.array(build_numbers)
 
     fig = Figure()
     canvas = FigureCanvas(fig)
-
+    width = 0.2
     ax = fig.add_subplot(111)
-    fig.gca().set_color_cycle(['green', 'red', 'grey'])
-    ax.plot(numbers, steps_passed)
-
+    passed = ax.bar(build_numbers, executions_passed, width, color='green')
+    all = ax.bar(build_numbers + width, executions_total, width, color='grey')
+    ax.set_ylabel(ylabel)
+    ax.set_xlabel( 'Build numbers')
+    ax.set_xticks(build_numbers + width / 2)
+    ax.set_xticklabels(build_numbers)
+    ax.legend((passed[0], all[0]), legend)
     response = HttpResponse(content_type='image/png')
     canvas.print_png(response)
+
     return response
 
 
+def render_steps_passed_img(request, name):
+    """
+    For given project name retrieve all its build runs and create graph with steps passed over all these runs.
+
+    :param request to process
+    :param name of build to create statistics from
+    :return https response with image of obtained data
+    """
+    runs = dao.development_over_time(name)
+    steps_passed = []
+    steps = []
+
+    for run in runs:
+        steps_passed.append(run.steps_passed)
+        steps.append(run.step_runs)
+
+    return create_bar(runs, steps_passed, steps,'Step count', ('Passed steps', 'All steps'))
+
+
+def render_features_passed_img(request, name):
+    """
+    For given project name retrieve all its build runs and create graph with featres passed over all these runs.
+
+    :param request to process
+    :param name of build to create statistics from
+    :return https response with image of obtained data
+    """
+    runs = dao.development_over_time(name)
+    features_passed = []
+    features = []
+
+    for run in runs:
+        features_passed.append(run.features_passed)
+        features.append(run.features_runs)
+
+    return create_bar(runs, features_passed, features, 'Features count', ('Passed features', 'All features'))
+
+
 def http_error404(request):
-    """Handle 404 status code."""
+    """
+    Handle 404 status code.
+
+    :param request to process
+    """
     return handle_error(request, 'errors/http404.html', 404)
 
 
 def http_error500(request):
-    """Handle 500 status code."""
+    """
+    Handle 500 status code.
+
+    :param request to process
+    """
     return handle_error(request, 'errors/http500.html', 500)
 
 
@@ -210,9 +258,9 @@ def handle_error(request, template_path, status_code):
     """
     Handle http error.
 
-    request - to process
-    template_path - path to template
-    status_code - for response
+    :param request - to process
+    :param template_path - path to template
+    :param status_code - for response
     """
     response = render_to_response(template_path, context_instance=RequestContext(request))
     response.status_code = status_code

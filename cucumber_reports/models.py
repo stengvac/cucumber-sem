@@ -102,7 +102,8 @@ class ScenarioRun(models.Model):
 
     def __str__(self):
         """Scenario definition string representation - name and type"""
-        return '{} {}'.format(self.scenario_definition.name, self.scenario_definition.type)
+        return '{} -  {} - {}'.format(self.scenario_definition.feature.name,
+                                 self.scenario_definition.name, self.scenario_definition.type)
 
 
 class StepDefinition(models.Model):

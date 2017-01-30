@@ -147,7 +147,7 @@ def convert_development_over_time(builds):
                     for step in run.step_runs.iterator():
                         steps += 1
                         feature_steps +=1
-                        if step.status == models.StepStatus[0][1]:
+                        if step.passed():
                             passed_steps += 1
                             feature_passed_steps += 1
             if feature_passed_steps == feature_steps:
