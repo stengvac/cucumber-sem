@@ -17,6 +17,10 @@ Reports
 -------
 First section of project provide reports from cucumber test executions.
 
+Projects overview
+-----------------
+List of all projects in database and their few last builds.
+
 Build execution report
 ----------------------
 Provide reports for selected build run.
@@ -27,6 +31,7 @@ Detailed report for selected feature run.
    - Background
    - Scenarios with their runs and data
    - Step results
+
 
 Statistics
 ----------
