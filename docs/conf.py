@@ -30,11 +30,11 @@ import os
 #sys.path.insert(0, os.path.abspath(‘.’))
 
 sys.path.insert(0, os.path.abspath('..'))
-from django.conf import settings
-import django
-settings.configure()
-os.environ['DJANGO_SETTINGS_MODULE'] = 'cucumber_reporting.settings'
-django.setup()
+# from django.conf import settings
+# import django
+# settings.configure()
+# os.environ['DJANGO_SETTINGS_MODULE'] = 'cucumber_reporting.settings'
+# django.setup()
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.

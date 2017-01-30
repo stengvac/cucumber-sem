@@ -57,25 +57,7 @@ def find_n_build_runs(times):
     """
     runs = models.BuildRun.objects.all().aggregate(builds='build_name').order_by('build_number')
 
-    res = []
-    last_run = None
-    name = None
-    same = 0
-
-    for run in runs:
-        meta = convert_build_metadata(run)
-        if name != run.build_name:
-            name = run.build_name
-            last_run = view_models.OverViewReport(name)
-            last_run.runs.append(meta)
-            res.append(last_run)
-            same = 0
-        else:
-            same += 1
-            if same < times:
-                last_run.runs.append(meta)
-
-    return res
+    return convert_last_n_build_runs(runs, times)
 
 
 def development_over_time(build_name):

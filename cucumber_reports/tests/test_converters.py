@@ -125,6 +125,7 @@ def test_convert_build_run_statistics():
     assert 1 == feature_stats.step_passed_cnt
     assert 1 == feature_stats.step_failed_cnt
 
+
 @pytest.mark.django_db
 def test_convert_development_over_time():
     build_run = create_build_run()
