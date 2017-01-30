@@ -28,6 +28,8 @@ class BuildRunReport:
         """
         self.metadata = metadata
         self.features = features
+        self.previous = metadata.number - 1
+        self.next = metadata.number + 1
 
 
 class FeatureMetadata(Statement):

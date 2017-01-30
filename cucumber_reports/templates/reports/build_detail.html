@@ -1,6 +1,12 @@
 {% extends 'layout.html' %}
 {% load filters %}
 
+
+{% block right_menu %}
+    <li><a href="{% url 'reports_build_detail' name=build.metadata.name number=build.previous %}">Previous build report</a></li>
+     <li><a href="{% url 'reports_build_detail' name=build.metadata.name number=build.next %}">Next build report</a></li>
+{% endblock %}
+
 {% block content %}
     <h1>Build detail</h1>
     <dl class="dl-horizontal">

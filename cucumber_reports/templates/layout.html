@@ -20,14 +20,20 @@
             <div class="navbar-header">
                 <a class="navbar-brand" href={% url 'index' %}>Index</a>
             </div>
+
+            <ul class="nav navbar-nav">
+                {% block left_menu %}
+                {% endblock %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% block right_menu %}
+                {% endblock %}
+            </ul>
+
+
+        </div>
     </nav>
-    {#        {% if form.errors %}#}
-    {#            <div class="alert alert-danger">#}
-    {#                <p>#}
-    {#                    <strong>{% trans "Oh snap!" %}</strong> {% trans "Please enter a correct username and password. Note that both fields are case-sensitive." %}#}
-    {#                </p>#}
-    {#            </div>#}
-    {#        {% endif %}#}
+
     {% block content %}
     {% endblock %}
 </div>

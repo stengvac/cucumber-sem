@@ -1,6 +1,10 @@
 {% extends 'layout.html' %}
 {% load filters %}
 
+{% block left_menu %}
+    <li><a href="{% url 'reports_build_detail' name=feature.build_metadata.name number=feature.build_metadata.number %}">Back to build report</a></li>
+{% endblock %}
+
 {% block content %}
     <h1 class="text-{{ feature.passed|success }}">Feature report page</h1>
 
