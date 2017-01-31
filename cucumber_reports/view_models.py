@@ -165,13 +165,14 @@ class StepStatus(Enum):
     """Step status - represent step execution result."""
     PASSED = 'p',
     FAILED = 'f',
+    MISSING = 'm',
     SKIPPED = 's',
     PENDING = 'e',
-    MISSING = 's'
 
     @classmethod
     def from_string(cls, value):
         """Return enum value for string value. Return None if enum not found or ars is None."""
+        print(value)
         for status in StepStatus:
             if status.value[0] == value:
                 return status
@@ -180,8 +181,8 @@ class StepStatus(Enum):
 
 class ScenarioType(Enum):
     """Type of scenario."""
-    SCENARIO = 's',
     SCENARIO_OUTLINE = 'o',
+    SCENARIO = 's',
     BACKGROUND = 'b'
 
     @classmethod

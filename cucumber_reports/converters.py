@@ -82,6 +82,7 @@ def convert_step_runs(step_definitions, step_runs):
     res = []
     index = 0
     for run in step_runs:
+        print(run.status)
         status = view_models.StepStatus.from_string(run.status)
         res.append(view_models.StepRun(step_definitions[index], status, run.duration, run.error_msg))
         index += 1
@@ -195,7 +196,7 @@ def _find_background(definitions):
     :return: background instance or None if not found
     """
     for x in definitions:
-        if x.type == models.ScenarioType[2][1]:
+        if x.type == view_models.ScenarioType.BACKGROUND.value[0]:
             return x
     return None
 

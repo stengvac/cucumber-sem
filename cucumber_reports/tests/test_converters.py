@@ -5,13 +5,15 @@ import pytest
 
 BUILD_AT = date(2017, 1, 29)
 BUILD_NAME = 'b_name'
-BUILD_NUMBER = '12'
+BUILD_NUMBER = 12
 FEATURE_NAME = 'f_name'
 FEATURE_DESC = 'f_desc'
 STEP_NAME = 's_name'
 STEP_KEYWORD = 's_key'
 STEP_DURATION = 4000
-STEP_RESULT = models.StepStatus[0][1]
+STEP_RESULT_PASSED = view_models.StepStatus.PASSED.value[0]
+STEP_RESULT_FAILED = view_models.StepStatus.FAILED.value[0]
+TYPE_SCENARIO = view_models.ScenarioType.SCENARIO.value[0]
 ERROR_MSG = 'msg'
 SCENARIO_NAME = 's_name'
 SCENARIO_DESC = 's_desc'
@@ -63,7 +65,7 @@ def test_convert_step_runs():
     run = models.StepRun()
     run.duration = STEP_DURATION
     run.error_msg = ERROR_MSG
-    run.status = STEP_RESULT
+    run.status = STEP_RESULT_PASSED
 
     result = converters.convert_step_runs([models.StepDefinition(name=STEP_NAME, keyword=STEP_KEYWORD)], [run])
 
@@ -78,9 +80,9 @@ def test_convert_step_runs():
 
 
 def test_find_background():
-    scenario_outline = models.ScenarioDefinition(type=models.ScenarioType[0][1])
-    scenario = models.ScenarioDefinition(type=models.ScenarioType[1][1])
-    background = models.ScenarioDefinition(type=models.ScenarioType[2][1])
+    scenario_outline = models.ScenarioDefinition(type=view_models.ScenarioType.SCENARIO_OUTLINE.value[0])
+    scenario = models.ScenarioDefinition(type=TYPE_SCENARIO)
+    background = models.ScenarioDefinition(type=view_models.ScenarioType.BACKGROUND.value[0])
 
     result = converters._find_background([scenario_outline, scenario, background])
 
@@ -91,7 +93,7 @@ def test_find_background():
 @pytest.mark.django_db
 def test_convert_scenario_definition():
 
-    scenario = create_scenario_definition(create_feature(create_build_run()), 'SCENARIO')
+    scenario = create_scenario_definition(create_feature(create_build_run()), TYPE_SCENARIO)
     create_scenario_run(scenario)
 
     result = converters.convert_scenario_definition(scenario)
@@ -107,10 +109,10 @@ def test_convert_scenario_definition():
 def test_convert_build_run_statistics():
     build_run = create_build_run()
     feature = create_feature(build_run)
-    scenario_def = create_scenario_definition(feature, 'SCENARIO')
+    scenario_def = create_scenario_definition(feature, TYPE_SCENARIO)
     scenario_run = create_scenario_run(scenario_def)
-    create_step_run(scenario_run, 'FAILED')
-    create_step_run(scenario_run, 'PASSED')
+    create_step_run(scenario_run, STEP_RESULT_FAILED)
+    create_step_run(scenario_run, STEP_RESULT_PASSED)
     create_step_definition(scenario_def)
 
     result = converters.convert_build_run_statistics(build_run)
@@ -130,17 +132,17 @@ def test_convert_build_run_statistics():
 def test_convert_development_over_time():
     build_run = create_build_run()
     feature = create_feature(build_run)
-    scenario_def = create_scenario_definition(feature, 'SCENARIO')
+    scenario_def = create_scenario_definition(feature, TYPE_SCENARIO)
     scenario_run = create_scenario_run(scenario_def)
-    create_step_run(scenario_run, 'PASSED')
-    create_step_run(scenario_run, 'PASSED')
+    create_step_run(scenario_run, STEP_RESULT_PASSED)
+    create_step_run(scenario_run, STEP_RESULT_PASSED)
     create_step_definition(scenario_def)
 
     build_run2 = create_build_run()
     feature = create_feature(build_run2)
-    scenario_def = create_scenario_definition(feature, 'SCENARIO')
+    scenario_def = create_scenario_definition(feature, TYPE_SCENARIO)
     scenario_run = create_scenario_run(scenario_def)
-    create_step_run(scenario_run, 'FAILED')
+    create_step_run(scenario_run, STEP_RESULT_FAILED)
     create_step_definition(scenario_def)
 
     result = converters.convert_development_over_time([build_run, build_run2])
