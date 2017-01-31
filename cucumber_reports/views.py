@@ -188,7 +188,7 @@ def create_bar(runs, executions_passed, executions_total, ylabel, legend):
     passed = ax.bar(build_numbers, executions_passed, width, color='green')
     all = ax.bar(build_numbers + width, executions_total, width, color='grey')
     ax.set_ylabel(ylabel)
-    ax.set_xlabel( 'Build numbers')
+    ax.set_xlabel('Build numbers')
     ax.set_xticks(build_numbers + width / 2)
     ax.set_xticklabels(build_numbers)
     ax.legend((passed[0], all[0]), legend)
@@ -219,7 +219,7 @@ def render_steps_passed_img(request, name):
 
 def render_features_passed_img(request, name):
     """
-    For given project name retrieve all its build runs and create graph with featres passed over all these runs.
+    For given project name retrieve all its build runs and create graph with features passed over all these runs.
 
     :param request to process
     :param name of build to create statistics from
@@ -228,10 +228,11 @@ def render_features_passed_img(request, name):
     runs = dao.development_over_time(name)
     features_passed = []
     features = []
+    print('feat')
 
     for run in runs:
         features_passed.append(run.features_passed)
-        features.append(run.features_runs)
+        features.append(run.features_cnt)
 
     return create_bar(runs, features_passed, features, 'Features count', ('Passed features', 'All features'))
 

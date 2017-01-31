@@ -11,8 +11,8 @@ urlpatterns = [
         views.FeatureReportView.as_view(), name='reports_feature_detail'),
 
     #Statistics
-    url(r'statistics/img/(?P<name>[\w|\W]+)/temp.png$', views.render_steps_passed_img, name='steps_development'),
-    url(r'statistics/img/(?P<name>[\w|\W]+)/temp.png$', views.render_features_passed_img, name='features_development'),
+    url(r'statistics/img/steps/(?P<name>[\w|\W]+)/temp.png$', views.render_steps_passed_img, name='steps_development'),
+    url(r'statistics/img/features/(?P<name>[\w|\W]+)/temp.png$', views.render_features_passed_img, name='features_development'),
     url(r'statistics/build/(?P<name>[\w|\W]+)/(?P<number>[\w|\W]+)/$', views.BuildRunStatisticsView.as_view(), name='statistics_build'),
     url(r'statistics/overall/(?P<name>[\w|\W]+)$', views.StatisticsBuildOverTimeView.as_view(), name='statistics_overall'),
     url(r'statistics/overview$', views.StatisticsBuildOverviewView.as_view(), name='statistics_overview'),
