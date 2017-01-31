@@ -1,5 +1,10 @@
 {% extends 'layout.html' %}
 {% load filters %}
+{% load static %}
+
+{% block project_js %}
+    <script src="{% static "cucumber_reports/js.js" %}"></script>
+{% endblock %}
 
 {% block left_menu %}
     <li><a href="{% url 'reports_build_detail' name=feature.build_metadata.name number=feature.build_metadata.number %}">Back to build report</a></li>
@@ -43,6 +48,7 @@
     {% endif %}
 
     <h2>Present scenarios</h2>
+      <input type="checkbox" id="hideScenarioRuns" onchange="hideRuns(this);">Hide passed runs<br>
     {% for definition in feature.scenario_definitions %}
         {% for run in definition.runs %}
             <div class="bs-callout bs-callout-{{ run.passed|success }}">

@@ -3,6 +3,7 @@
     {# Load the tag library #}
     {% load bootstrap3 %}
     {% load static %}
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 
     {# Load CSS and JavaScript #}
     {% bootstrap_css %}
@@ -10,6 +11,8 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{% static "cucumber_reports/style.css" %}">
+    {% block project_js %}
+    {% endblock %}
 </head>
 <body>
 <div class="content">

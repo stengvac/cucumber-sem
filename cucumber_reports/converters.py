@@ -29,18 +29,18 @@ def convert_feature_report(feature, build):
     converted_definitions = []
 
     if bg is not None:
-        converted_bg = view_models.ScenarioDefinitionReport(bg.name, bg.descriiption, None,
+        converted_bg = view_models.ScenarioDefinitionReport(bg.name, bg.description, None,
                                                             view_models.ScenarioType.BACKGROUND)
 
-        step_definitions = [convert_step_definition(step) for step in bg.step_definitions]
-        for run in bg.scenario_runs:
-            bg_steps.append(convert_step_runs(step_definitions, run.step_runs))
+        step_definitions = [convert_step_definition(step) for step in bg.step_definitions.iterator()]
+        for run in bg.scenario_runs.iterator():
+            bg_steps.append(convert_step_runs(step_definitions, run.step_runs.iterator()))
 
     bg_steps_cnt = len(bg_steps)
     run_index = 0
 
     for definition in definitions:
-        if definition.type != 'BACKGROUND':
+        if not definition.is_background():
             converted = convert_scenario_definition(definition)
             converted_definitions.append(converted)
 
@@ -82,7 +82,6 @@ def convert_step_runs(step_definitions, step_runs):
     res = []
     index = 0
     for run in step_runs:
-        print(run.status)
         status = view_models.StepStatus.from_string(run.status)
         res.append(view_models.StepRun(step_definitions[index], status, run.duration, run.error_msg))
         index += 1
@@ -196,7 +195,7 @@ def _find_background(definitions):
     :return: background instance or None if not found
     """
     for x in definitions:
-        if x.type == view_models.ScenarioType.BACKGROUND.value[0]:
+        if x.is_background():
             return x
     return None
 

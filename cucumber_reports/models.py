@@ -87,6 +87,13 @@ class ScenarioDefinition(models.Model):
         """Return True when there are no failures in definition runs."""
         return passed(self.scenario_runs.iterator())
 
+    def is_background(self):
+        """
+
+        :return: true when type eq background.
+        """
+        return self.type == ScenarioType[2][0]
+
     def __str__(self):
         """Scenario definition string representation - name and type"""
         return '{} {}'.format(self.name, self.type)
