@@ -23,22 +23,30 @@ Also technologies listed bellow will be required.
 2. Deploy Django web application to your desired server with help of uncle google. There are so many types and each of them differ
 so its meaningless to write deploy rules for each of them. But i will write down common outline.
   1. Copy this project to your server
-  2. Install required dependencies from requirements.txt or by setup.py
-  3. Specify data source and if needed perform database migrations by command executed in root directory of project
+  2. Create virtual env.
+  3. Install required dependencies from by setup.py
+  ```
+  python setup.py install
+  ```
+  Note: requirement.txt contains requirements for Heroku so there are some additional
+  dependencies, which are not need to run project locally.
+  4. Specify data source and if needed perform database migrations by command executed in root directory of project
   ```
   python manage.py migrate cucumber_reports
   ```
-  4. If you want to run project locally use:
+  5. If needed change data source in cucumber_reporting/settings.py the is 
+  variable DATABASES so change value to desired one.
+  6. If you want to run project locally use:
   ```
   python manage.py runserver
   ```
-  5. To manage local DB create super user with command
+  7. To manage local DB create super user with command
   ```
   python manage.py createsuperuser
   ```
-  6. With created super user can be application managed at admin section accessible
+  8. With created super user can be application managed at admin section accessible
   at URL <your_domain>/admin.
-  7. Application prefix is <your_domain>/cucumber so this prefix will lead to index.html.
+  9. Application prefix is <your_domain>/cucumber so this prefix will lead to index.html.
 3. Open index.html and select reports or statistics section.
 4. Inside statistics section you will see graph with test outputs development over time as two graphs. One with steps and second one with features per each build execution.
 5. Inside reports section can user find latest test outputs and check their detail for more details.
@@ -75,3 +83,26 @@ update this list in future.
 *  Numpy
 *  Pytest
 *  ...
+
+## Examples
+In project is included example_db.sqlite3 which contains some examples.
+Install project dependencies:
+```
+python setup.py install
+```
+To run project locally with examples just type in root directory.
+
+ ```
+
+ python manage.py runserver
+ ```
+
+## Implementation troubles
+* MongoDB connector for Django is no longer maintained so i have picked another DB - SQLite
+* Sphinx can't import module with project so docs does not contain any doc strings from code.
+  I have tried multiple configs/import variations but result was same.
+* I have tried to deploy application on Heroku but there was problem with osgi configuration. 
+  I am running out of time so only local host application is available right now.
+  
+
+  
