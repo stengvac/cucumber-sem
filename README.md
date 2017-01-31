@@ -20,9 +20,27 @@ Also technologies listed bellow will be required.
 
 ## Usage
 1. Connect data source.
-2. Deploy web application TODO create deploy instructions
+2. Deploy Django web application to your desired server with help of uncle google. There are so many types and each of them differ
+so its meaningless to write deploy rules for each of them. But i will write down common outline.
+  1. Copy this project to your server
+  2. Install required dependencies from requirements.txt or by setup.py
+  3. Specify data source and if needed perform database migrations by command executed in root directory of project
+  ```
+  python manage.py migrate cucumber_reports
+  ```
+  4. If you want to run project locally use:
+  ```
+  python manage.py runserver
+  ```
+  5. To manage local DB create super user with command
+  ```
+  python manage.py createsuperuser
+  ```
+  6. With created super user can be application managed at admin section accessible
+  at URL <your_domain>/admin.
+  7. Application prefix is <your_domain>/cucumber so this prefix will lead to index.html.
 3. Open index.html and select reports or statistics section.
-4. Inside statistics section you will see graph with test outputs development over time and other graphs (TODO create some meaningful GUI)
+4. Inside statistics section you will see graph with test outputs development over time as two graphs. One with steps and second one with features per each build execution.
 5. Inside reports section can user find latest test outputs and check their detail for more details.
 Also browse results from older builds and more (depends on work involved).
 
@@ -45,13 +63,13 @@ Also browse results from older builds and more (depends on work involved).
 ### Statistics
 *  number of features passed/failed over time
 *  number of features passed/failed in build run
-*  number of passed/failed/skipped/pending steps
+*  number of passed/total count of steps in build run
 
 This list is only general overview of the most important functionality. More details and necessary parts will reveal implementation so i will
 update this list in future.
 
 ## Technologies
-*  MongoDB - contains results from Cucumber tests
+*  SQLite DB - there is not supported connector for MongoDB for last 4 years
 *  Django
 *  Pandas
 *  Numpy
