@@ -52,6 +52,18 @@ so its meaningless to write deploy rules for each of them. But i will write down
 5. Inside reports section can user find latest test outputs and check their detail for more details.
 Also browse results from older builds and more (depends on work involved).
 
+## Examples
+In project is included example_db.sqlite3 which contains some examples.
+Install project dependencies:
+```
+python setup.py install
+```
+To run project locally with examples just type in root directory.
+
+ ```
+ python manage.py runserver
+ ```
+
 ## Functionality
 
 ### Common
@@ -84,18 +96,6 @@ update this list in future.
 *  Pytest
 *  ...
 
-## Examples
-In project is included example_db.sqlite3 which contains some examples.
-Install project dependencies:
-```
-python setup.py install
-```
-To run project locally with examples just type in root directory.
-
- ```
-
- python manage.py runserver
- ```
 
 ## Implementation troubles
 * MongoDB connector for Django is no longer maintained so i have picked another DB - SQLite

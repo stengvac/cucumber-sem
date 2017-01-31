@@ -5,13 +5,13 @@ with open('README.md') as f:
 
 setup(
     name='cucumber_reports',
-    version='0.0.1',
+    version='1.0',
     keywords='cucumber testing framework python-testing test driven development',
     description='Reporting and statistics tool for output of cucumber framework',
     long_description=long_description,
     author='Vaclav Stengl',
     author_email='stengvac@fit.cvut.cz',
-    # license='??', todo pick some
+    license='GPL 3',
     url='https://github.com/stengvac/cucumber-sem',
     packages=find_packages(),
     package_data={
@@ -23,7 +23,7 @@ setup(
         ]
     },
     install_requires=[
-        'django',
+        'Django',
         'numpy',
         'pandas',
         'django-pandas',
